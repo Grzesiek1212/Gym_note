@@ -27,7 +27,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2, // Liczba zakładek
+      length: 2,
       child: Scaffold(
         appBar: AppBar(
           title: Text(
@@ -46,7 +46,6 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
         ),
         body: TabBarView(
           children: [
-            // Zakładka "O ćwiczeniu"
             SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -65,7 +64,6 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
                     ),
                     const SizedBox(height: 16),
 
-                    // Level Section
                     Row(
                       children: [
                         const Icon(Icons.bar_chart, color: Colors.blueGrey, size: 24),
@@ -90,7 +88,6 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
                     ),
                     const SizedBox(height: 16),
 
-                    // Secondary Muscles Section
                     const Text(
                       'Mięśnie pomocnicze:',
                       style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -133,7 +130,6 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
               ),
             ),
 
-            // Zakładka "Statystyki"
             FutureBuilder<List<Map<String, dynamic>>>(
               future: _weightsFuture,
               builder: (context, snapshot) {

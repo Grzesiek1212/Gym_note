@@ -129,9 +129,6 @@ class _TrainingPlanCardState extends State<PlanCard> {
                   const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: () {
-
-
-                      // Przechodzimy do MainNavigationBar z odpowiednimi parametrami
                       Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
@@ -140,10 +137,8 @@ class _TrainingPlanCardState extends State<PlanCard> {
                             trainingPlanCard: widget.plan,
                           ),
                         ),
-                            (route) => false, // Usuwanie wszystkich poprzednich ekranów z historii
+                            (route) => false,
                       );
-
-                      // Informacja zwrotna dla użytkownika
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('Rozpoczęcie treningu...')),
                       );

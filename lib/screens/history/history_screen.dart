@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../../models/training_card_model.dart';
 import '../../services/history_service.dart';
 import '../../widgets/history_card.dart';
@@ -15,7 +14,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
   @override
   void initState() {
     super.initState();
-    _trainingHistoryFuture = HistoryService().getTrainingHistory(); // Pobierz dane z serwisu
+    _trainingHistoryFuture = HistoryService().getTrainingHistory();
   }
 
   @override
@@ -44,12 +43,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
             itemBuilder: (context, index) {
               var training = trainingHistory[index];
 
-              // Przekształcenie czasu trwania w sekundach na format MM:SS
               String formattedDuration = Duration(seconds: training.duration)
                   .toString()
-                  .substring(2, 7); // Usuwa "0:"
+                  .substring(2, 7);
 
-              // Sumowanie wag w treningu
               double totalWeight = training.exercises.fold(0.0, (sum, e) =>
               sum + e.sets.fold(0.0, (setSum, set) => setSum + set.weight)
               );

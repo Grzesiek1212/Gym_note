@@ -1,8 +1,8 @@
 import 'package:hive/hive.dart';
 
-part 'measurement_model.g.dart'; // To jest potrzebne do generowania adaptera
+part 'measurement_model.g.dart';
 
-@HiveType(typeId: 0) // Numer typeId musi być unikalny dla każdej klasy
+@HiveType(typeId: 0)
 class Measurement extends HiveObject {
   @HiveField(0)
   final int id;

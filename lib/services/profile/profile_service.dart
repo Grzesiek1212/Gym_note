@@ -88,13 +88,12 @@ class ProfileService {
   }
 
   Future<void> uploadImage(File image) async {
-    // Tutaj implementuj logikę przesyłania zdjęcia do bazy
+    // TODO: implementuj logikę przesyłania zdjęcia do bazy
     debugPrint('Zdjęcie wysyłane: ${image.path}');
     // Dodaj API POST/PUT do przesyłania pliku
   }
 
   Future<List<Map<String, String>>> fetchUserPhotosWithDates() async {
-    // Przykładowe dane
     return Future.delayed(
       const Duration(seconds: 2),
           () => [

@@ -5,11 +5,8 @@ import '../models/exercise_model.dart';
 import '../models/set_model.dart';
 
 class HistoryService {
-  // Symulowana funkcja pobierania historii treningów
   Future<List<TrainingCard>> getTrainingHistory() async {
-    await Future.delayed(const Duration(seconds: 2)); // Symulacja opóźnienia
 
-    // Symulowane dane historii treningów
     List<TrainingCard> history = [
       TrainingCard(
         exercises: [
@@ -69,7 +66,6 @@ class HistoryService {
 
   Future<void> updateTrainingDescription(TrainingCard trainingCard) async {
     await Future.delayed(const Duration(milliseconds: 500)); // Symulacja opóźnienia
-    // Logika do zapisania opisu w bazie danych lub innym medium
     print("Opis treningu został zaktualizowany na: ${trainingCard.description}");
   }
 }

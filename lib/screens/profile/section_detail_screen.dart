@@ -124,13 +124,13 @@ class _SectionDetailScreenState extends State<SectionDetailScreen> {
               sideTitles: SideTitles(
                 showTitles: true,
                 reservedSize: 50,
-                interval: measurements.length > 10 ? 2 : 1, // Wyświetlanie co 2 punkty, jeśli punktów jest więcej niż 10
+                interval: measurements.length > 10 ? 2 : 1,
                 getTitlesWidget: (value, meta) {
                   final index = value.toInt();
                   if (index >= 0 && index < measurements.length) {
                     final date = measurements[index]['date'] ?? '';
                     return Text(
-                      date.substring(5), // Skracanie daty do `MM-DD`
+                      date.substring(5),
                       style: const TextStyle(
                         color: Colors.black,
                         fontSize: 10,

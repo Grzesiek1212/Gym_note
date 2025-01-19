@@ -47,26 +47,22 @@ class _AddGeneralMeasurementsScreenState extends State<AddGeneralMeasurementsScr
                     final fatPercentage = _fatPercentageController.text.trim();
                     final musclePercentage = _musclePercentageController.text.trim();
 
-                    // Konwersja danych wejściowych na double
-                    final weight = double.tryParse(weightText) ?? 0.0; // Domyślnie 0.0, jeśli konwersja się nie powiedzie
+                    final weight = double.tryParse(weightText) ?? 0.0;
                     final height = double.tryParse(heightText) ?? 0.0;
 
-                    // Tworzenie mapy z danymi do zapisania
                     final generalMeasurements = {
-                      'weight': weightText.isNotEmpty ? weightText : '-', // Jeśli puste, zwracamy "-"
-                      'height': heightText.isNotEmpty ? heightText : '-', // Jeśli puste, zwracamy "-"
+                      'weight': weightText.isNotEmpty ? weightText : '-',
+                      'height': heightText.isNotEmpty ? heightText : '-',
                       'BMI': (weight > 0 && height > 0)
                           ? (weight / ((height / 100) * (height / 100))).toStringAsFixed(2)
-                          : '-', // Jeśli waga lub wzrost wynosi 0, zwracamy "-"
-                      'fat': fatPercentage.isNotEmpty ? fatPercentage : '-', // Jeśli puste, zwracamy "-"
-                      'muscles': musclePercentage.isNotEmpty ? musclePercentage : '-', // Jeśli puste, zwracamy "-"
+                          : '-',
+                      'fat': fatPercentage.isNotEmpty ? fatPercentage : '-',
+                      'muscles': musclePercentage.isNotEmpty ? musclePercentage : '-',
                     };
 
                     try {
-                      // Wywołanie funkcji zapisu w ProfileService
                       await ProfileGeneralMeasurementService().saveGeneralMeasurements(generalMeasurements);
 
-                      // Wyświetlenie SnackBar z informacją o sukcesie
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text('Dane ogólne zapisane pomyślnie!'),
@@ -74,7 +70,6 @@ class _AddGeneralMeasurementsScreenState extends State<AddGeneralMeasurementsScr
                         ),
                       );
 
-                      // Powrót do poprzedniego ekranu po sukcesie
                       Navigator.pop(context);
                     } catch (error) {
                       // Obsługa błędu

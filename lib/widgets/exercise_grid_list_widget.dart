@@ -31,11 +31,9 @@ class ExerciseGridListWidget extends StatelessWidget {
         return GestureDetector(
           onTap: () {
           if (isTrainingScreen) {
-            // Dodajemy ćwiczenie do listy w TrainingService
             Provider.of<TrainingService>(context, listen: false)
                 .addExerciseToTraining(exercise);
 
-            // Wyświetlamy komunikat SnackBar
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text('Dodano ćwiczenie: ${exercise.name}'),
@@ -43,11 +41,9 @@ class ExerciseGridListWidget extends StatelessWidget {
               ),
             );
 
-            // Cofnij użytkownika aż do TrainingScreen
             Navigator.popUntil(context, (route) => route.isFirst);
           }
           else {
-              // Przechodzimy do ekranu szczegółów ćwiczenia
               Navigator.push(
                 context,
                 MaterialPageRoute(

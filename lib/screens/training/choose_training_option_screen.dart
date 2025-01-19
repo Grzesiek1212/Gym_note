@@ -18,7 +18,6 @@ class ChooseTrainingOptionScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Pierwszy przycisk
             TrainingOptionCard(
               title: 'Aktywny plan treningowy',
               subtitle: 'Korzystaj z gotowego planu treningowego',
@@ -35,7 +34,6 @@ class ChooseTrainingOptionScreen extends StatelessWidget {
             ),
             SizedBox(height: 16),
 
-            // Drugi przycisk
             TrainingOptionCard(
               title: 'Własne plany treningowe',
               subtitle: 'Korzystaj już z planu przez siebie ułożonego',
@@ -52,7 +50,6 @@ class ChooseTrainingOptionScreen extends StatelessWidget {
             ),
             SizedBox(height: 16),
 
-            // Trzeci przycisk
             TrainingOptionCard(
               title: 'Trening bez planu',
               subtitle: 'Dodawaj ćwiczenia na bieżąco',

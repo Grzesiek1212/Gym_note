@@ -15,7 +15,7 @@ class ExerciseService {
   }
 
   Future<List<Map<String, dynamic>>> fetchWeights(Exercise exercise) async {
-    // Tutaj musimy założyć, że dane dotyczące ciężarów są przechowywane w innej tabeli
+    // TODO: Tutaj musimy założyć, że dane dotyczące ciężarów są przechowywane w innej tabeli
     // Otwórz box o nazwie "weights" (przykładowo)
     var box = await Hive.openBox<Map>('weights');
 

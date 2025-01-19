@@ -60,7 +60,6 @@ class _TrainingScreenState extends State<TrainingScreen> {
     }
   }
 
-  // Funkcja uruchamiająca stoper
   void _startStopwatch() {
     if (_isRunning) {
       _timer?.cancel();
@@ -85,7 +84,6 @@ class _TrainingScreenState extends State<TrainingScreen> {
     });
   }
 
-  // Funkcja do edytowania czasu
   void _editTime() {
     showDialog(
       context: context,
@@ -118,7 +116,6 @@ class _TrainingScreenState extends State<TrainingScreen> {
   Widget build(BuildContext context) {
     final trainingService = Provider.of<TrainingService>(context);
 
-    // Gdy trening nie jest rozpoczęty, pokaż przycisk "Rozpocznij trening"
     if (!widget.flag) {
       return Scaffold(
         appBar: AppBar(
@@ -209,7 +206,6 @@ class _TrainingScreenState extends State<TrainingScreen> {
       ),
       body: Column(
         children: [
-          // Górna część ekranu z zegarem
           Container(
             padding: const EdgeInsets.all(16),
             child: Row(
@@ -218,14 +214,12 @@ class _TrainingScreenState extends State<TrainingScreen> {
                 ElevatedButton(
                   onPressed: () {
                     setState(() {
-                      // Tworzenie kopii listy ćwiczeń
                       final exercisesCopy = trainingService.trainingExercisesList
                           .map((exercise) => exercise.copyWith(
                         sets: exercise.sets.map((set) => set.copyWith()).toList(),
                       ))
                           .toList();
 
-                      // Utwórz obiekt `completedTraining` z kopią danych
                       final completedTraining = TrainingCard(
                         date: DateTime.now(),
                         duration: trainingService.trainingTime,
@@ -235,7 +229,6 @@ class _TrainingScreenState extends State<TrainingScreen> {
 
                       print('Completed Training: $completedTraining');
 
-                      // Przejdź do ekranu podsumowania
                       trainingService.finishAndResetTraining(isNew);
                       trainingService.trainingExercisesList.clear();
                       trainingService.isTrainingStarted = false;
@@ -297,7 +290,6 @@ class _TrainingScreenState extends State<TrainingScreen> {
           ),
           const SizedBox(height: 16),
 
-          // Wyświetlanie ćwiczeń w treningu
           Expanded(
             child: trainingExercisesList.isEmpty
                 ? const Center(child: Text("Brak ćwiczeń w treningu"))
@@ -340,7 +332,6 @@ class _TrainingScreenState extends State<TrainingScreen> {
             ),
           ),
 
-          // Dodawanie ćwiczenia
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: ElevatedButton(

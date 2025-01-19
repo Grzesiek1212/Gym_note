@@ -47,16 +47,15 @@ class MyApp extends StatelessWidget {
       ),
       home: MainNavigationBar(
         flag: false,
-        trainingPlanCard: TrainingPlanCard.empty(), // Przekazujemy pusty obiekt
+        trainingPlanCard: TrainingPlanCard.empty(),
       ),
     );
   }
 }
 
 class MainNavigationBar extends StatefulWidget {
-  final bool flag; // Dodajemy flagę typu bool
-  final TrainingPlanCard trainingPlanCard; // Dodajemy obiekt TrainingPlanCard
-
+  final bool flag;
+  final TrainingPlanCard trainingPlanCard;
   const MainNavigationBar({
     super.key,
     required this.flag,

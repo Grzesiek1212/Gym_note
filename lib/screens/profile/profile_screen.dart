@@ -48,7 +48,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     if (pickedImage != null) {
       try {
-        // Wywołanie serwisu w celu zapisania zdjęcia w bazie
         await _profileService.uploadImage(File(pickedImage.path));
         debugPrint('Zdjęcie zostało wysłane do bazy.');
       } catch (e) {
@@ -184,7 +183,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     _buildBodyMeasurementRow(context, 'Udo', '${data['thigh']}'),
                     _buildBodyMeasurementRow(context, 'Łydka', '${data['calf']}'),
                     const SizedBox(height: 16),
-                    // Dodana sekcja zdjęcia sylwetki
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [

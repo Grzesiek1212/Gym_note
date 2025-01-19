@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import '../screens/exercise/exercise_list_screen.dart';
-import '../screens/training/exercise_training_list_screen.dart'; // Dodajemy ekran do treningów
+import '../screens/training/exercise_training_list_screen.dart';
 
 class ExerciseGridWidget extends StatelessWidget {
-  final bool isTrainingScreen; // Parametr do określenia, z jakiego ekranu przechodzimy
+  final bool isTrainingScreen;
   final List<Map<String, dynamic>> exercises = [
     {'name': 'Klatka piersiowa', 'image': 'assets/chest.png'},
     {'name': 'Plecy', 'image': 'assets/back.png'},
@@ -19,7 +19,6 @@ class ExerciseGridWidget extends StatelessWidget {
     {'name': 'Kardio', 'image': 'assets/cardio.png'},
   ];
 
-  // Konstruktor przyjmujący parametr isTrainingScreen
   ExerciseGridWidget({Key? key, required this.isTrainingScreen}) : super(key: key);
 
   @override
@@ -27,19 +26,17 @@ class ExerciseGridWidget extends StatelessWidget {
     return GridView.builder(
       padding: const EdgeInsets.all(16.0),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3, // 3 elementy w rzędzie
+        crossAxisCount: 3,
         crossAxisSpacing: 10,
         mainAxisSpacing: 10,
-        childAspectRatio: 0.8, // Proporcje obrazów
+        childAspectRatio: 0.8,
       ),
       itemCount: exercises.length,
       itemBuilder: (context, index) {
         final exercise = exercises[index];
         return GestureDetector(
           onTap: () {
-            // Na podstawie wartości isTrainingScreen, przechodzimy do odpowiedniego ekranu
             if (isTrainingScreen) {
-              // Przejście do ExerciseTrainingListScreen
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -47,7 +44,6 @@ class ExerciseGridWidget extends StatelessWidget {
                 ),
               );
             } else {
-              // Przejście do ExerciseListScreen
               Navigator.push(
                 context,
                 MaterialPageRoute(

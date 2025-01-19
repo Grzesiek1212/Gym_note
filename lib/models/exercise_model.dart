@@ -1,8 +1,8 @@
 import 'package:hive/hive.dart';
 
-part 'exercise_model.g.dart'; // Wygenerowany plik adaptera
+part 'exercise_model.g.dart';
 
-@HiveType(typeId: 1) // Upewnij się, że typeId jest unikalny w całym projekcie
+@HiveType(typeId: 1)
 class Exercise {
   @HiveField(0)
   final String name;

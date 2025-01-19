@@ -1,13 +1,11 @@
 class ExerciseSet {
-  final int repetitions; // Liczba powtórzeń w serii
-  final double weight;   // Ciężar w serii
-
+  final int repetitions;
+  final double weight;
   ExerciseSet({
     required this.repetitions,
     required this.weight,
   });
 
-  // Tworzenie obiektu z mapy
   factory ExerciseSet.fromMap(Map<String, dynamic> map) {
     return ExerciseSet(
       repetitions: map['repetitions'] as int,
@@ -15,7 +13,6 @@ class ExerciseSet {
     );
   }
 
-  // Konwersja obiektu do mapy
   Map<String, dynamic> toMap() {
     return {
       'repetitions': repetitions,
@@ -23,7 +20,6 @@ class ExerciseSet {
     };
   }
 
-  // Metoda copyWith poprawiona
   ExerciseSet copyWith({double? weight, int? repetitions}) {
     return ExerciseSet(
       weight: weight ?? this.weight,

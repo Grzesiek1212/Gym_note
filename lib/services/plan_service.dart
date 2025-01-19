@@ -5,14 +5,10 @@ import '../models/training_exercise_model.dart';
 import '../models/training_plan_card.dart';
 
 class PlanService {
-  // Lista przechowująca plans
   List<TrainingPlanCard> plans = [];
 
-  // Symulowana funkcja pobierania planów treningowych
   Future<List<TrainingPlanCard>> getPlans(bool isOwnPlans) async {
-    await Future.delayed(const Duration(seconds: 2)); // Symulacja opóźnienia
 
-    // Symulacja danych
     plans = isOwnPlans
         ? [
       TrainingPlanCard(
@@ -92,7 +88,6 @@ class PlanService {
     return plans;
   }
 
-  // Funkcja usuwania planu na podstawie nazwy
   void deletePlan(String planName) {
     plans.removeWhere((plan) => plan.name == planName);
   }

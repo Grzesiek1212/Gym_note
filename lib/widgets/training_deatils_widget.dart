@@ -5,7 +5,7 @@ import '../models/training_plan_card.dart';
 
 class TrainingDetailsWidget extends StatelessWidget {
   final TrainingCard training;
-  final bool isSummary; // Dla różnicowania widoków
+  final bool isSummary;
   final Function(String)? onDescriptionChanged;
 
   const TrainingDetailsWidget({
@@ -135,7 +135,7 @@ class TrainingDetailsWidget extends StatelessWidget {
                           trainingPlanCard: TrainingPlanCard.empty(),
                         ),
                       ),
-                          (route) => false, // Usuwanie wszystkich poprzednich ekranów z historii
+                          (route) => false,
                     );
                   },
                   style: ElevatedButton.styleFrom(

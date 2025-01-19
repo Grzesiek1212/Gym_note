@@ -5,10 +5,8 @@ import '../../models/exercise_model.dart';
 Future<void> addExercises() async {
   var exerciseBox = await Hive.openBox<Exercise>('exercises');
 
-  // Sprawdź, czy box jest pusty
   if (exerciseBox.isEmpty) {
     await exerciseBox.addAll([
-      // Klatka piersiowa
       Exercise(
         name: 'Wyciskanie na ławce',
         primaryMuscles: ['Klatka piersiowa'],
@@ -42,7 +40,6 @@ Future<void> addExercises() async {
         description: 'Ćwiczenie na rozwój siły całego ciała i mięśni pleców.',
         youtubeLink: 'https://www.youtube.com/watch?v=ytGaGIn3SjE',
       ),
-      // Dodaj pozostałe ćwiczenia zgodnie z wcześniejszym kodem...
     ]);
 
     print('Ćwiczenia zostały pomyślnie dodane.');

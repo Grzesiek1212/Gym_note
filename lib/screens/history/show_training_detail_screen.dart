@@ -7,9 +7,7 @@ class TrainingDetailScreen extends StatelessWidget {
   final HistoryService historyService = HistoryService();
 
   Future<TrainingCard> getTrainingDetails() async {
-    // Fetch training history
     List<TrainingCard> history = await historyService.getTrainingHistory();
-    // Return the first training card as a simulated detail
     return history.first;
   }
 
@@ -81,10 +79,9 @@ class TrainingDetailScreen extends StatelessWidget {
 
           final training = snapshot.data!;
 
-          // Użycie TrainingDetailsWidget
           return TrainingDetailsWidget(
             training: training,
-            isSummary: false, // To jest widok szczegółowy
+            isSummary: false,
             onDescriptionChanged: (newDescription) {
               updateDescription(newDescription, training);
             },

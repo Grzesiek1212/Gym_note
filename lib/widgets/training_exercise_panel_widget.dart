@@ -17,7 +17,6 @@ class ExercisePanelWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Nagłówek z nazwą ćwiczenia
           Text(
             exercise.exercise.name,
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
@@ -25,7 +24,6 @@ class ExercisePanelWidget extends StatelessWidget {
           ),
           SizedBox(height: 16),
 
-          // Lista serii
           Expanded(
             child: ListView.builder(
               itemCount: exercise.sets.length,
@@ -51,7 +49,6 @@ class ExercisePanelWidget extends StatelessWidget {
             ),
           ),
 
-          // Przycisk dodawania serii
           InkWell(
             onTap: () {
               _showAddSetDialog(context, trainingService);

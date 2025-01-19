@@ -2,16 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:gym_note/services/plan_service.dart';
 
 import '../../models/training_plan_card.dart';
-import '../../widgets/plan_card.dart'; // Importujemy nasz serwis
+import '../../widgets/plan_card.dart';
 
 class ChooseTrainingScreen extends StatelessWidget {
-  final String planType; // Typ planu (np. 'Własne plany treningowe')
+  final String planType;
 
   ChooseTrainingScreen({required this.planType});
 
   @override
   Widget build(BuildContext context) {
-    // Wykorzystujemy PlanService do pobrania danych
     final PlanService planService = PlanService();
 
     return Scaffold(
