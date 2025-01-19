@@ -42,17 +42,24 @@ class _AddGeneralMeasurementsScreenState extends State<AddGeneralMeasurementsScr
               Center(
                 child: ElevatedButton(
                   onPressed: () async {
-                    final weight = _weightController.text;
-                    final height = _heightController.text;
-                    final fatPercentage = _fatPercentageController.text;
-                    final musclePercentage = _musclePercentageController.text;
+                    final weightText = _weightController.text.trim();
+                    final heightText = _heightController.text.trim();
+                    final fatPercentage = _fatPercentageController.text.trim();
+                    final musclePercentage = _musclePercentageController.text.trim();
+
+                    // Konwersja danych wejściowych na double
+                    final weight = double.tryParse(weightText) ?? 0.0; // Domyślnie 0.0, jeśli konwersja się nie powiedzie
+                    final height = double.tryParse(heightText) ?? 0.0;
 
                     // Tworzenie mapy z danymi do zapisania
                     final generalMeasurements = {
-                      'waga': weight,
-                      'wzrost': height,
-                      'tluszcz': fatPercentage,
-                      'miesnie': musclePercentage,
+                      'waga': weightText.isNotEmpty ? weightText : '-', // Jeśli puste, zwracamy "-"
+                      'wzrost': heightText.isNotEmpty ? heightText : '-', // Jeśli puste, zwracamy "-"
+                      'BMI': (weight > 0 && height > 0)
+                          ? (weight / ((height / 100) * (height / 100))).toStringAsFixed(2)
+                          : '-', // Jeśli waga lub wzrost wynosi 0, zwracamy "-"
+                      'tluszcz': fatPercentage.isNotEmpty ? fatPercentage : '-', // Jeśli puste, zwracamy "-"
+                      'miesnie': musclePercentage.isNotEmpty ? musclePercentage : '-', // Jeśli puste, zwracamy "-"
                     };
 
                     try {

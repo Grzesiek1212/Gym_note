@@ -1,13 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gym_note/main.dart';
 import 'package:gym_note/services/plan_service.dart';
-import 'package:provider/provider.dart';
-import '../models/exercise_model.dart';
-import '../models/set_model.dart';
-import '../models/training_exercise_model.dart';
 import '../models/training_plan_card.dart';
-import '../screens/training/training_screen.dart';
-import '../services/training/training_service.dart'; // Dodanie importu dla PlanService
 
 class PlanCard extends StatefulWidget {
   final String planName;

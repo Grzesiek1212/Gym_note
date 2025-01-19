@@ -35,7 +35,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    _latestMeasurementsFuture = _profileService.fetchLatestMeasurements(1);
+    _latestMeasurementsFuture = _profileService.fetchLatestMeasurements();
     _requestPermissions();
   }
 
@@ -123,23 +123,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ],
                     ),
                     const SizedBox(height: 8),
-                    _buildGeneralDataRow(context, 'Waga', '${data['waga']} kg',
+                    _buildGeneralDataRow(context, 'waga', '${data['waga']} kg',
                         Icons.arrow_forward),
-                    _buildGeneralDataRow(context, 'Wzrost', '${data['wzrost']} cm',
+                    _buildGeneralDataRow(context, 'wzrost', '${data['wzrost']} cm',
                         Icons.arrow_forward),
-                    _buildGeneralDataRow(
-                      context,
-                      'BMI',
-                      data['waga'] != null && data['wzrost'] != null
-                          ? (data['waga'] /
-                          ((data['wzrost'] / 100) * (data['wzrost'] / 100)))
-                          .toStringAsFixed(2)
-                          : 'Brak danych',
-                      Icons.arrow_forward,
-                    ),
-                    _buildGeneralDataRow(context, '% Tłuszczu', data['tluszcz'],
+                    _buildGeneralDataRow(context, 'BMI', '${data['BMI']}',
+                      Icons.arrow_forward),
+                    _buildGeneralDataRow(context, 'tluszcz', '${data['tluszcz']} %',
                         Icons.arrow_forward),
-                    _buildGeneralDataRow(context, '% Mięśni', data['miesni'],
+                    _buildGeneralDataRow(context, 'miesnie', '${data['miesnie']} %',
                         Icons.arrow_forward),
                     const SizedBox(height: 16),
                     Row(

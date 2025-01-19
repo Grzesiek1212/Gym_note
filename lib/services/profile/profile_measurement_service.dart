@@ -1,5 +1,3 @@
-import '../../models/measurement_model.dart';
-
 class ProfileMeasurementService {
   Future<void> saveMeasurements(Map<String, String> measurements) async {
     // TODO: wysłanie nowych pomiarów

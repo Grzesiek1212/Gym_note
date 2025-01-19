@@ -1,71 +1,94 @@
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:hive/hive.dart';
 
 import '../../models/measurement_model.dart';
 
 class ProfileService {
 
-  Future<List<Measurement>> fetchUserMeasurements(int userId) async {
-    // Simulate network or database call
-    await Future.delayed(const Duration(milliseconds: 500));
+  Future<Map<String, dynamic>> fetchLatestMeasurements() async {
+    var box = await Hive.openBox<Measurement>('measurements');
 
-    return [
-      Measurement(
-        id: 1,
-        userId: userId,
-        type: 'waga',
-        value: 85.0,
-        date: DateTime.now().subtract(const Duration(days: 1)),
-      ),
-      Measurement(
-        id: 2,
-        userId: userId,
-        type: 'bmi',
-        value: 26.53,
-        date: DateTime.now().subtract(const Duration(days: 1)),
-      ),
-      Measurement(
-        id: 3,
-        userId: userId,
-        type: 'klatka_piersiowa',
-        value: 100.0,
-        date: DateTime.now().subtract(const Duration(days: 1)),
-      ),
+    List<String> types = [
+      'waga',
+      'wzrost',
+      'tluszcz',
+      'miesnie',
+      'klatka_piersiowa',
+      'biceps',
+      'BMI',
+      'przedramię',
+      'brzuch',
+      'biodra',
+      'uda',
+      'łydka',
     ];
-  }
 
-  Future<Map<String, dynamic>> fetchLatestMeasurements(int userId) async {
-    // TODO: ask backend about info about the last user statistic
-    await Future.delayed(const Duration(milliseconds: 500));
-
-    return {
-      'waga': 85.0,
-      'wzrost': 179,
-      'tluszcz': '-',
-      'miesni': '-',
-      'klatka_piersiowa': 100.0,
-      'biceps': 38,
-      'przedramię': '-',
-      'brzuch': '-',
-      'biodra': '-',
-      'uda': '-',
-      'łydka': '-',
+    // Inicjalizacja mapy z domyślną wartością '-'
+    Map<String, dynamic> latestMeasurements = {
+      for (var type in types) type: '-',
     };
+
+    // Iteracja po danych w boxie Hive
+    for (var measurement in box.values) {
+      if (types.contains(measurement.type)) {
+        latestMeasurements[measurement.type] =
+        measurement.value != null ? measurement.value.toString() : '-';
+      }
+    }
+
+    return latestMeasurements;
   }
 
-  Future<List<Map<String, dynamic>>> fetchMeasurementsByType(
-      String type) async {
-    // TODO: ask backend about info about the type
-    return [
-      {'value': 85, 'date': '2023-12-01', 'type': "kg"},
-      {'value': 87.0, 'date': '2023-12-08', 'type': "kg"},
-      {'value': 86.5, 'date': '2023-12-15', 'type': "kg"},
-      {'value': 88.5, 'date': '2023-12-15', 'type': "kg"},
-    ];
-    // Return empty list for other types
-    return [];
+  Future<List<Map<String, dynamic>>> fetchMeasurementsByType(String type) async {
+    var box = await Hive.openBox<Measurement>('measurements');
+
+    final unit = await getTypeOfMeasurement(type);
+
+    final filteredMeasurements = box.values
+        .where((measurement) => measurement.type == type)
+        .map((measurement) => {
+      'value': measurement.value,
+      'date': measurement.date.toString().split(' ')[0],
+      'type': unit,
+    })
+        .toList();
+
+    return filteredMeasurements;
   }
+
+  Future<String> getTypeOfMeasurement(String type) async {
+    switch (type) {
+      case 'waga':
+        return 'kg';
+      case 'wzrost':
+        return 'cm';
+      case 'tluszcz':
+        return '%';
+      case 'miesnie':
+        return '%';
+      case 'klatka_piersiowa':
+        return 'cm';
+      case 'biceps':
+        return 'cm';
+      case 'przedramię':
+        return 'cm';
+      case 'brzuch':
+        return 'cm';
+      case 'biodra':
+        return 'cm';
+      case 'uda':
+        return 'cm';
+      case 'łydka':
+        return 'cm';
+      case 'BMI':
+        return ''; // BMI jest jednostką bezwymiarową, więc brak jednostki
+      default:
+        return ''; // Zwróć pusty ciąg, jeśli typ nie jest rozpoznany
+    }
+  }
+
 
   Future<void> uploadImage(File image) async {
     // Tutaj implementuj logikę przesyłania zdjęcia do bazy

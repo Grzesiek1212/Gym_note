@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../../models/training_card_model.dart';
 import '../main.dart';
 import '../models/training_plan_card.dart';
-import '../services/plan_service.dart';
 
 class TrainingDetailsWidget extends StatelessWidget {
   final TrainingCard training;

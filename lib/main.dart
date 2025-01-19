@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
+import 'models/measurement_model.dart';
 import 'models/training_plan_card.dart';
 import 'screens/training/training_screen.dart';
 import 'screens/exercise/exercise_screen.dart';
@@ -8,7 +11,12 @@ import 'screens/plan_screen.dart';
 import 'screens/profile/profile_screen.dart';
 import 'services/training/training_service.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  Hive.registerAdapter(MeasurementAdapter());
+  await Hive.openBox<Measurement>('measurements');
+
   runApp(
     MultiProvider(
       providers: [

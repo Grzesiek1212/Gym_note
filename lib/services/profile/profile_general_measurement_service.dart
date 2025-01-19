@@ -1,9 +1,27 @@
-import '../../models/measurement_model.dart';
+import 'package:gym_note/models/measurement_model.dart';
+import 'package:hive/hive.dart';
 
 class ProfileGeneralMeasurementService {
 
   Future<void> saveGeneralMeasurements(Map<String, String> generalMeasurements) async {
-    // TODO: wysłanie nowych pomiarów
+    var box = await Hive.openBox<Measurement>('measurements');
+
+    for (var entry in generalMeasurements.entries) {
+      final type = entry.key;
+      final value = entry.value;
+
+      final parsedValue = double.tryParse(value) ?? 0.0;
+
+      final measurement = Measurement(
+        id: box.length + 1,
+        type: type,
+        value: parsedValue,
+        date: DateTime.now(),
+      );
+
+      await box.add(measurement);
+    }
+
     print('Zapisano dane ogólne: $generalMeasurements');
   }
 

@@ -1,13 +1,23 @@
-class Measurement {
+import 'package:hive/hive.dart';
+
+part 'measurement_model.g.dart'; // To jest potrzebne do generowania adaptera
+
+@HiveType(typeId: 0) // Numer typeId musi być unikalny dla każdej klasy
+class Measurement extends HiveObject {
+  @HiveField(0)
   final int id;
-  final int userId;
+
+  @HiveField(1)
   final String type;
+
+  @HiveField(2)
   final double value;
+
+  @HiveField(3)
   final DateTime date;
 
   Measurement({
     required this.id,
-    required this.userId,
     required this.type,
     required this.value,
     required this.date,
@@ -16,7 +26,6 @@ class Measurement {
   factory Measurement.fromJson(Map<String, dynamic> json) {
     return Measurement(
       id: json['id'],
-      userId: json['userId'],
       type: json['type'],
       value: json['value'],
       date: DateTime.parse(json['date']),
@@ -26,7 +35,6 @@ class Measurement {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'userId': userId,
       'type': type,
       'value': value,
       'date': date.toIso8601String(),

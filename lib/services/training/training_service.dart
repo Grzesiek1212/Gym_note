@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import '../../models/exercise_model.dart';
 import '../../models/set_model.dart';
