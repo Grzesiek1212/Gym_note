@@ -22,6 +22,10 @@ class _SectionDetailScreenState extends State<SectionDetailScreen> {
     _measurementsFuture = _profileService.fetchMeasurementsByType(widget.section);
   }
 
+  void GetTypeSection(String section){
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

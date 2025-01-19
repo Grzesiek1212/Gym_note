@@ -64,15 +64,15 @@ class _AddMeasurementScreenState extends State<AddMeasurementScreen> {
 
                     // Tworzenie mapy z danymi do zapisania
                     final measurements = {
-                      'klatka_piersiowa': chest,
-                      'biceps_lewy': leftBiceps,
-                      'biceps_prawy': rightBiceps,
-                      'przedramie_lewe': leftForearm,
-                      'przedramie_prawe': rightForearm,
-                      'brzuch': waist,
-                      'biodra': hips,
-                      'uda': thigh,
-                      'lydka': calf,
+                      'chest': chest,
+                      'leftBiceps': leftBiceps,
+                      'rightBiceps': rightBiceps,
+                      'leftForearm': leftForearm,
+                      'rightForearm': rightForearm,
+                      'waist': waist,
+                      'hips': hips,
+                      'thigh': thigh,
+                      'calf': calf,
                     };
 
                     try {

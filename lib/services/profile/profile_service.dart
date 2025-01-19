@@ -10,27 +10,35 @@ class ProfileService {
   Future<Map<String, dynamic>> fetchLatestMeasurements() async {
     var box = await Hive.openBox<Measurement>('measurements');
 
-    List<String> types = [
-      'waga',
-      'wzrost',
-      'tluszcz',
-      'miesnie',
-      'klatka_piersiowa',
-      'biceps',
-      'BMI',
-      'przedramię',
-      'brzuch',
-      'biodra',
-      'uda',
-      'łydka',
-    ];
+    for (var key in box.keys) {
+      final measurement = box.get(key);
+      if (measurement != null) {
+        print('Key: $key, Type: ${measurement.type}, Value: ${measurement.value}');
+      } else {
+        print('Key: $key has a null value in the box.');
+      }
+    }
 
-    // Inicjalizacja mapy z domyślną wartością '-'
+    List<String> types = [
+      'weight',
+      'height',
+      'fat',
+      'muscles',
+      'chest',
+      'leftBiceps',
+      'rightBiceps',
+      'BMI',
+      'leftForearm',
+      'rightForearm',
+      'waist',
+      'hips',
+      'thigh',
+      'calf',
+    ];
     Map<String, dynamic> latestMeasurements = {
       for (var type in types) type: '-',
     };
 
-    // Iteracja po danych w boxie Hive
     for (var measurement in box.values) {
       if (types.contains(measurement.type)) {
         latestMeasurements[measurement.type] =
@@ -43,11 +51,11 @@ class ProfileService {
 
   Future<List<Map<String, dynamic>>> fetchMeasurementsByType(String type) async {
     var box = await Hive.openBox<Measurement>('measurements');
-
-    final unit = await getTypeOfMeasurement(type);
+    final measurementType = await getNameOfSection(type);
+    final unit = await getMeasurementUnit(measurementType);
 
     final filteredMeasurements = box.values
-        .where((measurement) => measurement.type == type)
+        .where((measurement) => measurement.type == measurementType)
         .map((measurement) => {
       'value': measurement.value,
       'date': measurement.date.toString().split(' ')[0],
@@ -58,37 +66,26 @@ class ProfileService {
     return filteredMeasurements;
   }
 
-  Future<String> getTypeOfMeasurement(String type) async {
-    switch (type) {
-      case 'waga':
-        return 'kg';
-      case 'wzrost':
-        return 'cm';
-      case 'tluszcz':
-        return '%';
-      case 'miesnie':
-        return '%';
-      case 'klatka_piersiowa':
-        return 'cm';
-      case 'biceps':
-        return 'cm';
-      case 'przedramię':
-        return 'cm';
-      case 'brzuch':
-        return 'cm';
-      case 'biodra':
-        return 'cm';
-      case 'uda':
-        return 'cm';
-      case 'łydka':
-        return 'cm';
-      case 'BMI':
-        return ''; // BMI jest jednostką bezwymiarową, więc brak jednostki
-      default:
-        return ''; // Zwróć pusty ciąg, jeśli typ nie jest rozpoznany
-    }
-  }
+  Future<String> getMeasurementUnit(String type) async {
+    const units = {
+      'weight': 'kg',
+      'height': 'cm',
+      'fat': '%',
+      'muscles': '%',
+      'chest': 'cm',
+      'leftBiceps': 'cm',
+      'rightBiceps': 'cm',
+      'leftForearm': 'cm',
+      'rightForearm': 'cm',
+      'waist': 'cm',
+      'hips': 'cm',
+      'thigh': 'cm',
+      'calf': 'cm',
+      'BMI': '',
+    };
 
+    return units[type] ?? '';
+  }
 
   Future<void> uploadImage(File image) async {
     // Tutaj implementuj logikę przesyłania zdjęcia do bazy
@@ -107,5 +104,26 @@ class ProfileService {
       ],
     );
   }
+
+  Future<String> getNameOfSection(String type) async {
+    const sectionNames = {
+      'Waga': 'weight',
+      'Wzrost': 'height',
+      'Tłuszcz': 'fat',
+      'Mięśnie': 'muscles',
+      'Klatka piersiowa': 'chest',
+      'Lewy biceps': 'leftBiceps',
+      'Prawy biceps': 'rightBiceps',
+      'Lewe przedramie': 'leftForearm',
+      'Prawe przedramie': 'rightForearm',
+      'Talia': 'waist',
+      'Biodra': 'hips',
+      'Udo': 'thigh',
+      'Łydka': 'calf',
+      'BMI': 'BMI',
+    };
+    return sectionNames[type] ?? '';
+  }
+
 
 }

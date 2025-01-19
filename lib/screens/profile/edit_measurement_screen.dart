@@ -15,20 +15,20 @@ class _EditBodyMeasurementsScreenState extends State<EditMeasurementsScreen> {
   bool _isLoading = false;
   String? _selectedDate;
   List<String> _availableDates = [];
-
   @override
   void initState() {
     super.initState();
     const initialKeys = [
-      'klatka_piersiowa',
-      'biceps_lewy',
-      'biceps_prawy',
-      'przedramie_lewe',
-      'przedramie_prawe',
-      'brzuch',
-      'biodra',
-      'uda',
-      'lydka'
+      'chest',
+      'leftBiceps',
+      'rightBiceps',
+      'BMI',
+      'leftForearm',
+      'rightForearm',
+      'waist',
+      'hips',
+      'thigh',
+      'calf',
     ];
     for (var key in initialKeys) {
       _controllers[key] = TextEditingController();

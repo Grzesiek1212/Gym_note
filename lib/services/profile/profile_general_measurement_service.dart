@@ -26,26 +26,64 @@ class ProfileGeneralMeasurementService {
   }
 
   Future<Map<String, String>> fetchGeneralMeasurementsByDate(String date) async {
-    // TODO: pobieranie głównych danych po dacie
-    return {
-      'waga': '86.5',
-      'wzrost': '180',
-      'tluszcz': '18',
-      'miesnie': '40',
+    var box = await Hive.openBox<Measurement>('measurements');
+
+    final filteredMeasurements = box.values
+        .where((measurement) =>
+    measurement.date.toIso8601String().split('T')[0] == date)
+        .where((measurement) =>
+        ['weight', 'height', 'fat', 'muscles'].contains(measurement.type))
+        .toList();
+
+    final result = {
+      for (var measurement in filteredMeasurements)
+        measurement.type: measurement.value.toString(),
     };
+
+    return result;
   }
 
   Future<void> updateGeneralMeasurements({
     required String date,
     required Map<String, String> measurements,
   }) async {
-    // TODO: Wyślij datę i pomiary do backendu
-    print('Dane zapisane: $measurements dla daty: $date');
+    var box = await Hive.openBox<Measurement>('measurements');
+
+    final existingMeasurements = box.values
+        .where((measurement) =>
+    measurement.date.toIso8601String().split('T')[0] == date)
+        .where((measurement) =>
+        measurements.keys.contains(measurement.type))
+        .toList();
+
+    for (var measurement in existingMeasurements) {
+      final newValue = measurements[measurement.type];
+      if (newValue != null) {
+        final parsedValue = double.tryParse(newValue) ?? 0.0;
+        final updatedMeasurement = Measurement(
+          id: measurement.id,
+          type: measurement.type,
+          value: parsedValue,
+          date: measurement.date,
+        );
+        await box.put(measurement.key, updatedMeasurement);
+      }
+    }
+
+    print('Zaktualizowano dane ogólne: $measurements dla daty: $date');
   }
 
   Future<List<String>> fetchGeneralAvailableDates() async {
-    // TODO: pobierz dostępne daty
-    return ['2023-12-01', '2023-12-08', '2023-12-15'];
+    var box = await Hive.openBox<Measurement>('measurements');
+    String type = 'BMI';
+    final datesWithType = box.values
+        .where((measurement) => measurement.type == type)
+        .map((measurement) => measurement.date.toIso8601String().split('T')[0])
+        .toSet()
+        .toList();
+
+    print('Dates with type "$type": $datesWithType');
+    return datesWithType;
   }
 
 

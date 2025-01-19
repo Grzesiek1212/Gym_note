@@ -53,13 +53,13 @@ class _AddGeneralMeasurementsScreenState extends State<AddGeneralMeasurementsScr
 
                     // Tworzenie mapy z danymi do zapisania
                     final generalMeasurements = {
-                      'waga': weightText.isNotEmpty ? weightText : '-', // Jeśli puste, zwracamy "-"
-                      'wzrost': heightText.isNotEmpty ? heightText : '-', // Jeśli puste, zwracamy "-"
+                      'weight': weightText.isNotEmpty ? weightText : '-', // Jeśli puste, zwracamy "-"
+                      'height': heightText.isNotEmpty ? heightText : '-', // Jeśli puste, zwracamy "-"
                       'BMI': (weight > 0 && height > 0)
                           ? (weight / ((height / 100) * (height / 100))).toStringAsFixed(2)
                           : '-', // Jeśli waga lub wzrost wynosi 0, zwracamy "-"
-                      'tluszcz': fatPercentage.isNotEmpty ? fatPercentage : '-', // Jeśli puste, zwracamy "-"
-                      'miesnie': musclePercentage.isNotEmpty ? musclePercentage : '-', // Jeśli puste, zwracamy "-"
+                      'fat': fatPercentage.isNotEmpty ? fatPercentage : '-', // Jeśli puste, zwracamy "-"
+                      'muscles': musclePercentage.isNotEmpty ? musclePercentage : '-', // Jeśli puste, zwracamy "-"
                     };
 
                     try {

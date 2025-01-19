@@ -18,7 +18,7 @@ class _EditMeasurementsScreenState extends State<EditGeneralMeasurementsScreen> 
   @override
   void initState() {
     super.initState();
-    const initialKeys = ['waga', 'wzrost', 'tluszcz', 'miesnie'];
+    const initialKeys = ['weight', 'height', 'fat', 'muscles'];
     for (var key in initialKeys) {
       _controllers[key] = TextEditingController();
     }
