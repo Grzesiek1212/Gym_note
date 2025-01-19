@@ -1,9 +1,25 @@
+import 'package:hive/hive.dart';
+
+part 'exercise_model.g.dart'; // Wygenerowany plik adaptera
+
+@HiveType(typeId: 1) // Upewnij się, że typeId jest unikalny w całym projekcie
 class Exercise {
+  @HiveField(0)
   final String name;
+
+  @HiveField(1)
   final List<String> primaryMuscles;
+
+  @HiveField(2)
   final List<String> secondaryMuscles;
+
+  @HiveField(3)
   final String level;
+
+  @HiveField(4)
   final String description;
+
+  @HiveField(5)
   final String youtubeLink;
 
   Exercise({
@@ -25,6 +41,7 @@ class Exercise {
       youtubeLink: map['youtubeLink'] as String,
     );
   }
+
   Map<String, dynamic> toMap() {
     return {
       'name': name,
@@ -35,6 +52,4 @@ class Exercise {
       'youtubeLink': youtubeLink,
     };
   }
-
-
 }

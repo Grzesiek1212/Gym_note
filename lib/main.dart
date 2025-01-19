@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:gym_note/screens/exercise/exercise_data.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
+import 'models/exercise_model.dart';
 import 'models/measurement_model.dart';
 import 'models/training_plan_card.dart';
 import 'screens/training/training_screen.dart';
@@ -11,11 +13,17 @@ import 'screens/plan_screen.dart';
 import 'screens/profile/profile_screen.dart';
 import 'services/training/training_service.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   Hive.registerAdapter(MeasurementAdapter());
+  Hive.registerAdapter(ExerciseAdapter());
+
+  // Otwórz boxy
   await Hive.openBox<Measurement>('measurements');
+
+  // Dodaj ćwiczenia
+  await addExercises();
 
   runApp(
     MultiProvider(
@@ -26,7 +34,6 @@ void main() async{
     ),
   );
 }
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
