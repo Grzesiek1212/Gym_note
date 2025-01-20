@@ -1,9 +1,20 @@
+import 'package:hive/hive.dart';
 import 'training_exercise_model.dart';
 
+part 'training_card_model.g.dart';
+
+@HiveType(typeId: 5)
 class TrainingCard {
-  List<TrainingExerciseModel> exercises;
+  @HiveField(0)
+  final List<TrainingExerciseModel> exercises;
+
+  @HiveField(1)
   final DateTime date;
+
+  @HiveField(2)
   final int duration;
+
+  @HiveField(3)
   final String description;
 
   TrainingCard({
@@ -12,15 +23,6 @@ class TrainingCard {
     required this.duration,
     required this.description,
   });
-
-  Map<String, dynamic> toMap() {
-    return {
-      'exercises': exercises.map((e) => e.toMap()).toList(),
-      'date': date.toIso8601String(),
-      'duration': duration,
-      'description':description,
-    };
-  }
 
   factory TrainingCard.fromMap(Map<String, dynamic> map) {
     return TrainingCard(
@@ -33,6 +35,14 @@ class TrainingCard {
     );
   }
 
+  Map<String, dynamic> toMap() {
+    return {
+      'exercises': exercises.map((e) => e.toMap()).toList(),
+      'date': date.toIso8601String(),
+      'duration': duration,
+      'description': description,
+    };
+  }
   TrainingCard copyWith({
     DateTime? date,
     int? duration,

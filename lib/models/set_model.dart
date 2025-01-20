@@ -1,6 +1,15 @@
+import 'package:hive/hive.dart';
+
+part 'set_model.g.dart';
+
+@HiveType(typeId: 3) // Ensure typeId is unique for all models
 class ExerciseSet {
+  @HiveField(0)
   final int repetitions;
+
+  @HiveField(1)
   final double weight;
+
   ExerciseSet({
     required this.repetitions,
     required this.weight,

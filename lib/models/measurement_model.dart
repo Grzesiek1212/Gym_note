@@ -2,7 +2,7 @@ import 'package:hive/hive.dart';
 
 part 'measurement_model.g.dart';
 
-@HiveType(typeId: 0)
+@HiveType(typeId: 2)
 class Measurement extends HiveObject {
   @HiveField(0)
   final int id;

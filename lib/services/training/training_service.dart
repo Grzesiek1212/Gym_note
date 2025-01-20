@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import '../../models/exercise_model.dart';
 import '../../models/set_model.dart';
 import '../../models/training_card_model.dart';
@@ -24,13 +25,11 @@ class TrainingService with ChangeNotifier {
     notifyListeners();
   }
 
-  // Funkcja do rozpoczęcia liczenia czasu treningu
   void startTrainingTime() {
     trainingStartDate = DateTime.now();
     notifyListeners();
   }
 
-  // Funkcja do dodawania ćwiczenia do listy
   void addExerciseToTraining(Exercise exercise) {
     var newTrainingExercise = TrainingExerciseModel(
       exercise: exercise,
@@ -45,7 +44,6 @@ class TrainingService with ChangeNotifier {
     notifyListeners();
   }
 
-  // Funkcja do usuwania ćwiczenia z listy
   void removeExerciseFromTraining(TrainingExerciseModel trainingExercise) {
     _trainingExercisesList.remove(trainingExercise);
     notifyListeners();
@@ -72,14 +70,16 @@ class TrainingService with ChangeNotifier {
     notifyListeners();
   }
 
-  void saveTrainingData() {
+  void saveTrainingData() async{
     final training = TrainingCard(
       exercises: List<TrainingExerciseModel>.from(_trainingExercisesList),
       date: DateTime.now(),
       duration: trainingTime,
       description: "Fajny trening",
     );
-    // TODO: wysłać to na backend
+    var trainingBox = await Hive.openBox<TrainingCard>('trainingCards');
+    // Save the training card to the database
+    await trainingBox.add(training);
     print("Zapisano trening: ${training.toMap()}");
   }
 

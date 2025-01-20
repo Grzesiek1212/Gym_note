@@ -5,6 +5,9 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'models/exercise_model.dart';
 import 'models/measurement_model.dart';
+import 'models/set_model.dart';
+import 'models/training_card_model.dart';
+import 'models/training_exercise_model.dart';
 import 'models/training_plan_card.dart';
 import 'screens/training/training_screen.dart';
 import 'screens/exercise/exercise_screen.dart';
@@ -16,15 +19,20 @@ import 'services/training/training_service.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
+
+  //await Hive.deleteFromDisk();
+
   Hive.registerAdapter(MeasurementAdapter());
   Hive.registerAdapter(ExerciseAdapter());
+  Hive.registerAdapter(ExerciseSetAdapter());
+  Hive.registerAdapter(TrainingExerciseModelAdapter());
+  Hive.registerAdapter(TrainingCardAdapter());
 
-  // Otwórz boxy
   await Hive.openBox<Measurement>('measurements');
+  await Hive.openBox<Exercise>('exercises');
+  await Hive.openBox<TrainingCard>('trainingCards');
 
-  // Dodaj ćwiczenia
   await addExercises();
-
   runApp(
     MultiProvider(
       providers: [

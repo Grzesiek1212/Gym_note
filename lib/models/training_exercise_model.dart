@@ -1,11 +1,18 @@
+import 'package:flutter/src/widgets/framework.dart';
+import 'package:hive/hive.dart';
 import 'exercise_model.dart';
 import 'set_model.dart';
 
-class TrainingExerciseModel {
-  final Exercise exercise;
-  List<ExerciseSet> sets;
+part 'training_exercise_model.g.dart';
 
-  // Konstruktor
+@HiveType(typeId: 4)
+class TrainingExerciseModel {
+  @HiveField(0)
+  final Exercise exercise;
+
+  @HiveField(1)
+  final List<ExerciseSet> sets;
+
   TrainingExerciseModel({
     required this.exercise,
     required this.sets,
@@ -14,7 +21,8 @@ class TrainingExerciseModel {
   factory TrainingExerciseModel.fromMap(Map<String, dynamic> map) {
     var setsFromMap = (map['sets'] as List<dynamic>?)
         ?.map((setMap) => ExerciseSet.fromMap(setMap as Map<String, dynamic>))
-        .toList() ?? [];
+        .toList() ??
+        [];
 
     return TrainingExerciseModel(
       exercise: Exercise.fromMap(map['exercise'] as Map<String, dynamic>),
@@ -28,15 +36,14 @@ class TrainingExerciseModel {
       'sets': sets.map((set) => set.toMap()).toList(),
     };
   }
+
   TrainingExerciseModel copyWith({
     Exercise? exercise,
     List<ExerciseSet>? sets,
   }) {
     return TrainingExerciseModel(
       exercise: exercise ?? this.exercise,
-      sets: sets != null
-          ? sets.map((set) => set.copyWith()).toList()
-          : this.sets.map((set) => set.copyWith()).toList(),
+      sets: sets ?? this.sets.map((set) => set.copyWith()).toList(),
     );
   }
 }

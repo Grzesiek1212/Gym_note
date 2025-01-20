@@ -1,41 +1,41 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'measurement_model.dart';
+part of 'training_card_model.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class MeasurementAdapter extends TypeAdapter<Measurement> {
+class TrainingCardAdapter extends TypeAdapter<TrainingCard> {
   @override
-  final int typeId = 2;
+  final int typeId = 5;
 
   @override
-  Measurement read(BinaryReader reader) {
+  TrainingCard read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return Measurement(
-      id: fields[0] as int,
-      type: fields[1] as String,
-      value: fields[2] as double,
-      date: fields[3] as DateTime,
+    return TrainingCard(
+      exercises: (fields[0] as List).cast<TrainingExerciseModel>(),
+      date: fields[1] as DateTime,
+      duration: fields[2] as int,
+      description: fields[3] as String,
     );
   }
 
   @override
-  void write(BinaryWriter writer, Measurement obj) {
+  void write(BinaryWriter writer, TrainingCard obj) {
     writer
       ..writeByte(4)
       ..writeByte(0)
-      ..write(obj.id)
+      ..write(obj.exercises)
       ..writeByte(1)
-      ..write(obj.type)
+      ..write(obj.date)
       ..writeByte(2)
-      ..write(obj.value)
+      ..write(obj.duration)
       ..writeByte(3)
-      ..write(obj.date);
+      ..write(obj.description);
   }
 
   @override
@@ -44,7 +44,7 @@ class MeasurementAdapter extends TypeAdapter<Measurement> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is MeasurementAdapter &&
+      other is TrainingCardAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
