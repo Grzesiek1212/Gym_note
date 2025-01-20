@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../models/training_card_model.dart';
-import '../../models/training_plan_card.dart';
+import '../../models/training_plan_card_model.dart';
 import '../../services/training/training_service.dart';
 import '../../widgets/training_exercise_panel_widget.dart';
 import 'choose_training_option_screen.dart';
@@ -11,7 +11,7 @@ import 'training_summary_screen.dart';
 
 class TrainingScreen extends StatefulWidget {
   final bool flag;
-  final TrainingPlanCard trainingPlanCard;
+  final TrainingPlanCardModel trainingPlanCard;
 
   const TrainingScreen({
     Key? key,
@@ -230,7 +230,6 @@ class _TrainingScreenState extends State<TrainingScreen> {
                       print('Completed Training: $completedTraining');
 
                       trainingService.finishAndResetTraining(isNew);
-                      trainingService.trainingExercisesList.clear();
                       trainingService.isTrainingStarted = false;
 
                       print(trainingService.trainingExercisesList.length);

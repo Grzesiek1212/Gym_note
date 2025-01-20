@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/training_plan_card.dart';
+import '../models/training_plan_card_model.dart';
 import '../services/plan_service.dart';
 import '../widgets/plan_card.dart';
 
@@ -10,14 +10,12 @@ class PlanScreen extends StatefulWidget {
 
 class _PlanScreenState extends State<PlanScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  final PlanService _planService = PlanService(); // Utworzenie instancji serwisu
-  late Future<List<TrainingPlanCard>> _plansFuture; // Zmienna dla danych plans
+  final PlanService _planService = PlanService();
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-    _plansFuture = _planService.getPlans(false); // Przykładowe pobieranie danych gotowych planów
   }
 
   @override
@@ -62,8 +60,8 @@ class _PlanScreenState extends State<PlanScreen> with SingleTickerProviderStateM
   }
 
   Widget _buildTabContent(String message, {required bool isOwnPlans}) {
-    return FutureBuilder<List<TrainingPlanCard>>(
-      future: _planService.getPlans(isOwnPlans), // Pobranie danych za pomocą serwisu
+    return FutureBuilder<List<TrainingPlanCardModel>>(
+      future: _planService.getPlans(isOwnPlans),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());

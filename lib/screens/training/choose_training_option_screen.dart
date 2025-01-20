@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../main.dart';
-import '../../models/training_plan_card.dart';
+import '../../models/training_plan_card_model.dart';
 import '../../widgets/training_option_card.dart';
 import 'choose_training_screen.dart';
 
@@ -59,7 +59,7 @@ class ChooseTrainingOptionScreen extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (context) => MainNavigationBar(
                       flag: true,
-                      trainingPlanCard: TrainingPlanCard.empty(),
+                      trainingPlanCard: TrainingPlanCardModel.empty(),
                     ),
                   ),
                       (route) => false, // Usuwanie wszystkich poprzednich ekranów z historii

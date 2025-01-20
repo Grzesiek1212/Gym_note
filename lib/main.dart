@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gym_note/screens/exercise/exercise_data.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'models/exercise_model.dart';
@@ -8,7 +7,7 @@ import 'models/measurement_model.dart';
 import 'models/set_model.dart';
 import 'models/training_card_model.dart';
 import 'models/training_exercise_model.dart';
-import 'models/training_plan_card.dart';
+import 'models/training_plan_card_model.dart';
 import 'screens/training/training_screen.dart';
 import 'screens/exercise/exercise_screen.dart';
 import 'screens/history/history_screen.dart';
@@ -20,17 +19,19 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
 
-  //await Hive.deleteFromDisk();
+  await Hive.deleteFromDisk();
 
   Hive.registerAdapter(MeasurementAdapter());
   Hive.registerAdapter(ExerciseAdapter());
   Hive.registerAdapter(ExerciseSetAdapter());
   Hive.registerAdapter(TrainingExerciseModelAdapter());
   Hive.registerAdapter(TrainingCardAdapter());
+  Hive.registerAdapter(TrainingPlanCardModelAdapter());
 
   await Hive.openBox<Measurement>('measurements');
   await Hive.openBox<Exercise>('exercises');
   await Hive.openBox<TrainingCard>('trainingCards');
+  await Hive.openBox<TrainingPlanCardModel>('trainingPlanCards');
 
   await addExercises();
   runApp(
@@ -55,7 +56,7 @@ class MyApp extends StatelessWidget {
       ),
       home: MainNavigationBar(
         flag: false,
-        trainingPlanCard: TrainingPlanCard.empty(),
+        trainingPlanCard: TrainingPlanCardModel.empty(),
       ),
     );
   }
@@ -63,7 +64,7 @@ class MyApp extends StatelessWidget {
 
 class MainNavigationBar extends StatefulWidget {
   final bool flag;
-  final TrainingPlanCard trainingPlanCard;
+  final TrainingPlanCardModel trainingPlanCard;
   const MainNavigationBar({
     super.key,
     required this.flag,

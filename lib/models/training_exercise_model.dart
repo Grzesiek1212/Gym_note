@@ -1,4 +1,3 @@
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:hive/hive.dart';
 import 'exercise_model.dart';
 import 'set_model.dart';

@@ -41,8 +41,11 @@ class ProfileService {
 
     for (var measurement in box.values) {
       if (types.contains(measurement.type)) {
-        latestMeasurements[measurement.type] =
-        measurement.value != null ? measurement.value.toString() : '-';
+        if (measurement.value != null) {
+          latestMeasurements[measurement.type] = measurement.value.toString();
+        } else {
+          latestMeasurements[measurement.type] = '-';
+        }
       }
     }
 

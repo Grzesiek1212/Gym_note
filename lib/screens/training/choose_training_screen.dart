@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gym_note/services/plan_service.dart';
 
-import '../../models/training_plan_card.dart';
+import '../../models/training_plan_card_model.dart';
 import '../../widgets/plan_card.dart';
 
 class ChooseTrainingScreen extends StatelessWidget {
@@ -19,7 +19,7 @@ class ChooseTrainingScreen extends StatelessWidget {
         backgroundColor: const Color(0xFFF5F5F5),
         elevation: 0,
       ),
-      body: FutureBuilder<List<TrainingPlanCard>>(
+      body: FutureBuilder<List<TrainingPlanCardModel>>(
         future: planService.getPlans(planType == 'Własne plany treningowe'),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {

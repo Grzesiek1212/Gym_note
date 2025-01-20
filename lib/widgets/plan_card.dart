@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:gym_note/main.dart';
 import 'package:gym_note/services/plan_service.dart';
-import '../models/training_plan_card.dart';
+import '../models/training_plan_card_model.dart';
 
 class PlanCard extends StatefulWidget {
   final String planName;
   final List<Map<String, String>> exercises;
-  final TrainingPlanCard plan;
+  final TrainingPlanCardModel plan;
 
   const PlanCard({
     Key? key,

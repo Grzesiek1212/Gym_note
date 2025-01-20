@@ -1,94 +1,35 @@
 import 'dart:async';
-import '../models/exercise_model.dart';
-import '../models/set_model.dart';
-import '../models/training_exercise_model.dart';
-import '../models/training_plan_card.dart';
+import 'package:hive/hive.dart';
+import '../models/training_plan_card_model.dart';
 
 class PlanService {
-  List<TrainingPlanCard> plans = [];
+  List<TrainingPlanCardModel> plans = [];
 
-  Future<List<TrainingPlanCard>> getPlans(bool isOwnPlans) async {
+  Future<List<TrainingPlanCardModel>> getPlans(bool isOwnPlans) async {
+    var box = await Hive.openBox<TrainingPlanCardModel>('trainingPlans');
 
-    plans = isOwnPlans
-        ? [
-      TrainingPlanCard(
-        exercises: [
-          TrainingExerciseModel(
-            exercise: Exercise(
-              name: 'Wyciśnięcie sztangi na płaskiej ławce',
-              primaryMuscles: ['Klatka piersiowa'],
-              secondaryMuscles: ['Triceps', 'Barki'],
-              level: 'Zaawansowany',
-              description: 'Opis ćwiczenia...',
-              youtubeLink: 'https://www.youtube.com',
-            ),
-            sets: [
-              ExerciseSet(repetitions: 12, weight: 60.0),
-              ExerciseSet(repetitions: 10, weight: 70.0),
-            ],
-          ),
-          TrainingExerciseModel(
-            exercise: Exercise(
-              name: 'Wiosłowanie na maszynie',
-              primaryMuscles: ['Plecy'],
-              secondaryMuscles: ['Biceps'],
-              level: 'Średnio zaawansowany',
-              description: 'Opis ćwiczenia...',
-              youtubeLink: 'https://www.youtube.com',
-            ),
-            sets: [
-              ExerciseSet(repetitions: 12, weight: 40.0),
-              ExerciseSet(repetitions: 10, weight: 50.0),
-            ],
-          ),
-        ],
-        name: 'Plan Treningowy 1',
-        createdAt: DateTime.now(),
-        type: 'own',
-      ),
-    ]
-        : [
-      TrainingPlanCard(
-        exercises: [
-          TrainingExerciseModel(
-            exercise: Exercise(
-              name: 'Prostowanie nóg na maszynie',
-              primaryMuscles: ['Nogi'],
-              secondaryMuscles: ['Brzuch'],
-              level: 'Średnio zaawansowany',
-              description: 'Opis ćwiczenia...',
-              youtubeLink: 'https://www.youtube.com',
-            ),
-            sets: [
-              ExerciseSet(repetitions: 15, weight: 40.0),
-              ExerciseSet(repetitions: 12, weight: 50.0),
-            ],
-          ),
-          TrainingExerciseModel(
-            exercise: Exercise(
-              name: 'Wyciśnięcie w siadzie na maszynie',
-              primaryMuscles: ['Klatka piersiowa'],
-              secondaryMuscles: ['Barki'],
-              level: 'Zaawansowany',
-              description: 'Opis ćwiczenia...',
-              youtubeLink: 'https://www.youtube.com',
-            ),
-            sets: [
-              ExerciseSet(repetitions: 12, weight: 50.0),
-              ExerciseSet(repetitions: 10, weight: 60.0),
-            ],
-          ),
-        ],
-        name: 'Gotowy Plan 1',
-        createdAt: DateTime.now(),
-        type: 'ready',
-      ),
-    ];
+    final filteredPlans = box.values
+        .where((plan) => isOwnPlans ? plan.type == 'own' : plan.type == 'ready')
+        .toList();
 
-    return plans;
+    for (var plan in filteredPlans) {
+      print("Nazwa planu: ${plan.name}, Liczba ćwiczeń: ${plan.exercises.length}");
+    }
+
+    return filteredPlans;
   }
 
-  void deletePlan(String planName) {
-    plans.removeWhere((plan) => plan.name == planName);
+  void deletePlan(String planName) async {
+    var box = await Hive.openBox<TrainingPlanCardModel>('trainingPlans');
+    final planKey = box.keys.firstWhere(
+          (key) => box.get(key)?.name == planName,
+      orElse: () => null,
+    );
+    if (planKey != null) {
+      await box.delete(planKey);
+      print("Plan o nazwie $planName został usunięty.");
+    } else {
+      print("Nie znaleziono planu o nazwie $planName.");
+    }
   }
 }

@@ -4,7 +4,7 @@ import '../../models/exercise_model.dart';
 import '../../models/set_model.dart';
 import '../../models/training_card_model.dart';
 import '../../models/training_exercise_model.dart';
-import '../../models/training_plan_card.dart';
+import '../../models/training_plan_card_model.dart';
 
 class TrainingService with ChangeNotifier {
   List<TrainingExerciseModel> _trainingExercisesList = [];
@@ -20,7 +20,7 @@ class TrainingService with ChangeNotifier {
     return DateTime.now().difference(trainingStartDate!).inMinutes;
   }
 
-  void setTrainingFromPlan(TrainingPlanCard trainingPlanCard) {
+  void setTrainingFromPlan(TrainingPlanCardModel trainingPlanCard) {
     _trainingExercisesList = List<TrainingExerciseModel>.from(trainingPlanCard.exercises);
     notifyListeners();
   }
@@ -59,18 +59,20 @@ class TrainingService with ChangeNotifier {
     notifyListeners();
   }
 
-  void finishAndResetTraining(bool isNew) {
-    trainingStartDate = null;
-    saveTrainingData();
+  Future<void> finishAndResetTraining(bool isNew) async {
+    await saveTrainingData();
     if (isNew) {
-      savePlanTrainingData();
+      await savePlanTrainingData();
     } else {
-      // TODO: aktualizowanie w modelu nowych cięzarów jakie wykonał lub zmiana ideii w kontekście pobrania ostatnich wyników
+      // TODO: Aktualizowanie w modelu nowych ciężarów lub zmiana idei w kontekście pobrania ostatnich wyników
     }
+
+    trainingStartDate = null;
+    _trainingExercisesList.clear();
     notifyListeners();
   }
 
-  void saveTrainingData() async{
+  Future<void> saveTrainingData() async{
     final training = TrainingCard(
       exercises: List<TrainingExerciseModel>.from(_trainingExercisesList),
       date: DateTime.now(),
@@ -83,15 +85,19 @@ class TrainingService with ChangeNotifier {
     print("Zapisano trening: ${training.toMap()}");
   }
 
-  void savePlanTrainingData() {
-    final trainingPlan = TrainingPlanCard(
+  Future<void> savePlanTrainingData() async {
+    var trainingPlanBox = await Hive.openBox<TrainingPlanCardModel>('trainingPlans');
+
+    final trainingPlan = TrainingPlanCardModel(
       exercises: List<TrainingExerciseModel>.from(_trainingExercisesList),
-      name: "Trening z dnia ${DateTime.now().toIso8601String()}",
+      name: "Trening z dnia ${DateTime.now().toIso8601String().split('T').first}",
       createdAt: DateTime.now(),
       type: 'own',
     );
-    // TODO: wysłać to na backend
-    print("Zapisano trening: ${trainingPlan.toMap()}");
+
+    await trainingPlanBox.add(trainingPlan);
+
+    print("Zapisano trening-plan w bazie: ${trainingPlan.toMap()}");
   }
 
   List<TrainingExerciseModel> getTrainingExercises() {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../models/training_card_model.dart';
 import '../main.dart';
-import '../models/training_plan_card.dart';
+import '../models/training_plan_card_model.dart';
 
 class TrainingDetailsWidget extends StatelessWidget {
   final TrainingCard training;
@@ -132,7 +132,7 @@ class TrainingDetailsWidget extends StatelessWidget {
                       MaterialPageRoute(
                         builder: (context) => MainNavigationBar(
                           flag: false,
-                          trainingPlanCard: TrainingPlanCard.empty(),
+                          trainingPlanCard: TrainingPlanCardModel.empty(),
                         ),
                       ),
                           (route) => false,
