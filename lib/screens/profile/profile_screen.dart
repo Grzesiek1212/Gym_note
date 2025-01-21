@@ -29,9 +29,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     } else if (status.isDenied) {
       debugPrint('Camera permission denied');
     } else if (status.isPermanentlyDenied) {
-      debugPrint('Camera permission permanently denied. Please enable it from settings.');
+      debugPrint(
+          'Camera permission permanently denied. Please enable it from settings.');
     }
   }
+
   @override
   void initState() {
     super.initState();
@@ -100,7 +102,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) =>
-                                    const EditGeneralMeasurementsScreen(),
+                                        const EditGeneralMeasurementsScreen(),
                                   ),
                                 );
                               },
@@ -112,7 +114,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) =>
-                                    const AddGeneralMeasurementsScreen(),
+                                        const AddGeneralMeasurementsScreen(),
                                   ),
                                 );
                               },
@@ -122,16 +124,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ],
                     ),
                     const SizedBox(height: 8),
-                    _buildGeneralDataRow(context, 'Waga', '${data['weight']} kg',
-                        Icons.arrow_forward),
-                    _buildGeneralDataRow(context, 'Wzrost', '${data['height']} cm',
-                        Icons.arrow_forward),
-                    _buildGeneralDataRow(context, 'BMI', '${data['BMI']}',
-                      Icons.arrow_forward),
+                    _buildGeneralDataRow(context, 'Waga',
+                        '${data['weight']} kg', Icons.arrow_forward),
+                    _buildGeneralDataRow(context, 'Wzrost',
+                        '${data['height']} cm', Icons.arrow_forward),
+                    _buildGeneralDataRow(
+                        context, 'BMI', '${data['BMI']}', Icons.arrow_forward),
                     _buildGeneralDataRow(context, 'Tłuszcz', '${data['fat']} %',
                         Icons.arrow_forward),
-                    _buildGeneralDataRow(context, 'Mięśnie', '${data['muscles']} %',
-                        Icons.arrow_forward),
+                    _buildGeneralDataRow(context, 'Mięśnie',
+                        '${data['muscles']} %', Icons.arrow_forward),
                     const SizedBox(height: 16),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -151,7 +153,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const EditMeasurementsScreen(),
+                                    builder: (context) =>
+                                        const EditMeasurementsScreen(),
                                   ),
                                 );
                               },
@@ -162,7 +165,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const AddMeasurementScreen(),
+                                    builder: (context) =>
+                                        const AddMeasurementScreen(),
                                   ),
                                 );
                               },
@@ -172,16 +176,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ],
                     ),
                     const SizedBox(height: 8),
-                    _buildBodyMeasurementRow(context, 'Klatka piersiowa',
-                        '${data['chest']}'),
-                    _buildBodyMeasurementRow(context, 'Lewy biceps', '${data['leftBiceps']}'),
-                    _buildBodyMeasurementRow(context, 'Prawy biceps', '${data['rightBiceps']}'),
-                    _buildBodyMeasurementRow(context, 'Lewe przedramie', '${data['leftForearm']}'),
-                    _buildBodyMeasurementRow(context, 'Prawe przedramie', '${data['rightForearm']}'),
-                    _buildBodyMeasurementRow(context, 'Talia', '${data['waist']}'),
-                    _buildBodyMeasurementRow(context, 'Biodra', '${data['hips']}'),
-                    _buildBodyMeasurementRow(context, 'Udo', '${data['thigh']}'),
-                    _buildBodyMeasurementRow(context, 'Łydka', '${data['calf']}'),
+                    _buildBodyMeasurementRow(
+                        context, 'Klatka piersiowa', '${data['chest']}'),
+                    _buildBodyMeasurementRow(
+                        context, 'Lewy biceps', '${data['leftBiceps']}'),
+                    _buildBodyMeasurementRow(
+                        context, 'Prawy biceps', '${data['rightBiceps']}'),
+                    _buildBodyMeasurementRow(
+                        context, 'Lewe przedramie', '${data['leftForearm']}'),
+                    _buildBodyMeasurementRow(
+                        context, 'Prawe przedramie', '${data['rightForearm']}'),
+                    _buildBodyMeasurementRow(
+                        context, 'Talia', '${data['waist']}'),
+                    _buildBodyMeasurementRow(
+                        context, 'Biodra', '${data['hips']}'),
+                    _buildBodyMeasurementRow(
+                        context, 'Udo', '${data['thigh']}'),
+                    _buildBodyMeasurementRow(
+                        context, 'Łydka', '${data['calf']}'),
                     const SizedBox(height: 16),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -203,19 +215,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         const SizedBox(height: 8),
                         ElevatedButton.icon(
-                          icon: const Icon(Icons.camera_alt),
-                          label: const Text('Zrób zdjęcie'),
+                          icon: const Icon(
+                            Icons.camera_alt,
+                            color: Colors.green,
+                          ),
+                          label: const Text(
+                            'Zrób zdjęcie',
+                            style: TextStyle(color: Colors.black54),
+                          ),
                           onPressed: _takePicture,
                         ),
                         const SizedBox(height: 16),
                         ElevatedButton.icon(
-                          icon: const Icon(Icons.photo_album),
-                          label: const Text('Zobacz zdjęcia użytkownika'),
+                          icon: const Icon(
+                            Icons.photo_album,
+                            color: Colors.green,
+                          ),
+                          label: const Text(
+                            'Zobacz zdjęcia użytkownika',
+                            style: TextStyle(color: Colors.black54),
+                          ),
                           onPressed: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const UserPhotosScreen(), // Nowy ekran
+                                builder: (context) =>
+                                    const UserPhotosScreen(), // Nowy ekran
                               ),
                             );
                           },

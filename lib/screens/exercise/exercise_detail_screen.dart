@@ -2,6 +2,9 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:gym_note/services/exercise_service.dart';
 import '../../models/exercise_model.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:intl/intl.dart';
+
 
 class ExerciseDetailScreen extends StatefulWidget {
   final Exercise exercise;
@@ -19,7 +22,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
   @override
   void initState() {
     super.initState();
-    _weightsFuture = exerciseService.fetchWeights(widget.exercise);
+    _weightsFuture = exerciseService.fetchExerciseExecutions(widget.exercise);
   }
 
 
@@ -99,7 +102,6 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
                     ),
                     const SizedBox(height: 16),
 
-                    // YouTube Link Section
                     const Text(
                       'Technika wykonania:',
                       style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -107,13 +109,38 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
                     const SizedBox(height: 8),
                     Center(
                       child: ElevatedButton.icon(
-                        onPressed: () {
-                          // Open the YouTube link using a URL launcher package
-                          // Example: launchUrl(Uri.parse(widget.exercise.youtubeLink));
+                        onPressed: () async {
+                          // Sprawdzamy, czy link jest poprawny
+                          if (widget.exercise.youtubeLink.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Link jest pusty.')),
+                            );
+                            return;
+                          }
+
+                          final uri = Uri.parse(widget.exercise.youtubeLink);
+
+                          // Sprawdzamy, czy link można otworzyć
+                          if (await canLaunchUrl(uri)) {
+                            try {
+                              await launchUrl(
+                                uri,
+                                mode: LaunchMode.externalApplication,
+                              );
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Nie można otworzyć linku.')),
+                              );
+                            }
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Nie można otworzyć linku.')),
+                            );
+                          }
                         },
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                          backgroundColor: Colors.blueGrey,
+                          backgroundColor: Colors.blue,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
@@ -151,10 +178,13 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
                             itemCount: weights.length,
                             itemBuilder: (context, index) {
                               final weight = weights[index];
+                              final dateString = weight['date'] as String;
+                              final dateTime = DateTime.parse(dateString);
+                              final formatted = DateFormat('yyyy-MM-dd HH:mm').format(dateTime);
                               return Card(
                                 child: ListTile(
-                                  title: Text('${weight['value']} kg'),
-                                  subtitle: Text('Data: ${weight['date']}'),
+                                  title: Text('Ciężar: ${weight['weight']} kg \nPowtórzenia: ${weight['repetitions']}'),
+                                  subtitle: Text('Data: $formatted'),
                                 ),
                               );
                             },
@@ -177,7 +207,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
   Widget _buildChart(List<Map<String, dynamic>> weights) {
     final spots = weights.asMap().entries.map((entry) {
       final index = entry.key;
-      final value = (entry.value['value'] as num).toDouble();
+      final value = (entry.value['weight'] as num).toDouble();
       return FlSpot(index.toDouble(), value);
     }).toList();
 
@@ -226,9 +256,11 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
                 getTitlesWidget: (value, meta) {
                   final index = value.toInt();
                   if (index >= 0 && index < weights.length) {
-                    final date = weights[index]['date'] ?? '';
+                    final dateString = weights[index]['date'] as String;
+                    final dateTime = DateTime.parse(dateString);
+                    final formattedDate = DateFormat('dd-MM').format(dateTime);
                     return Text(
-                      date.substring(5),
+                      formattedDate,
                       style: const TextStyle(
                         color: Colors.black,
                         fontSize: 10,
@@ -256,9 +288,9 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
               ),
               barWidth: 4,
               belowBarData: BarAreaData(
-                show: true,
+                show: false,
                 gradient: LinearGradient(
-                  colors: [Colors.orange.withOpacity(0.2), Colors.transparent],
+                  colors: [Colors.orangeAccent, Colors.transparent],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                 ),

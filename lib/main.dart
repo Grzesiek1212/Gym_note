@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gym_note/models/photo_model.dart';
 import 'package:gym_note/screens/exercise/exercise_data.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
@@ -27,11 +28,13 @@ void main() async {
   Hive.registerAdapter(TrainingExerciseModelAdapter());
   Hive.registerAdapter(TrainingCardAdapter());
   Hive.registerAdapter(TrainingPlanCardModelAdapter());
+  Hive.registerAdapter(PhotoModelAdapter());
 
   await Hive.openBox<Measurement>('measurements');
   await Hive.openBox<Exercise>('exercises');
   await Hive.openBox<TrainingCard>('trainingCards');
   await Hive.openBox<TrainingPlanCardModel>('trainingPlanCards');
+  await Hive.openBox<PhotoModel>('PhotoModels');
 
   await addExercises();
   runApp(

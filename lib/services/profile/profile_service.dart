@@ -1,7 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:gym_note/models/photo_model.dart';
 import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../../models/measurement_model.dart';
 
@@ -90,22 +92,36 @@ class ProfileService {
     return units[type] ?? '';
   }
 
-  Future<void> uploadImage(File image) async {
-    // TODO: implementuj logikę przesyłania zdjęcia do bazy
-    debugPrint('Zdjęcie wysyłane: ${image.path}');
-    // Dodaj API POST/PUT do przesyłania pliku
+  Future<List<Map<String, String>>> fetchUserPhotosWithDates() async {
+    var box = await Hive.openBox<PhotoModel>('PhotoModels');
+
+    List<Map<String, String>> photosWithDates = box.values.map((photoModel) {
+      return {
+        'url': photoModel.photoURL,
+        'date': photoModel.dateAT.toIso8601String(),
+      };
+    }).toList();
+
+    return photosWithDates;
   }
 
-  Future<List<Map<String, String>>> fetchUserPhotosWithDates() async {
-    return Future.delayed(
-      const Duration(seconds: 2),
-          () => [
-        {'url': 'https://i.wpimg.pl/730x0/m.fitness.wp.pl/gettyimages-1139452970-e02e5eb40.jpg', 'date': '2025-01-01'},
-        {'url': 'https://th.bing.com/th/id/OIP.GftZBLQFEMuoi3QdwfA_cwHaE7?rs=1&pid=ImgDetMain', 'date': '2025-01-02'},
-        {'url': 'https://gomez.pl/orbitvu/481/SD212W000020002/sd212w000020002000s/images2d/sd212w000020002000s_4.jpg', 'date': '2025-01-03'},
-      ],
+  Future<void> uploadImage(File image) async {
+    var box = await Hive.openBox<PhotoModel>('PhotoModels');
+
+    final appDir = await getApplicationDocumentsDirectory();
+    final fileName = DateTime.now().toIso8601String() + '.jpg';
+    final savedImage = await File(image.path).copy('${appDir.path}/$fileName');
+
+    final photoModel = PhotoModel(
+      photoURL: savedImage.path,
+      dateAT: DateTime.now(),
     );
+
+    await box.add(photoModel);
+
+    debugPrint('Zdjęcie zapisane lokalnie: ${savedImage.path}');
   }
+
 
   Future<String> getNameOfSection(String type) async {
     const sectionNames = {

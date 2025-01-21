@@ -1,5 +1,6 @@
 import 'package:hive/hive.dart';
 import '../../models/exercise_model.dart';
+import '../models/training_card_model.dart';
 
 class ExerciseService {
   Future<List<Exercise>> fetchExercisesByCategory(String category) async {
@@ -14,22 +15,24 @@ class ExerciseService {
     return exercises;
   }
 
-  Future<List<Map<String, dynamic>>> fetchWeights(Exercise exercise) async {
-    // TODO: Tutaj musimy założyć, że dane dotyczące ciężarów są przechowywane w innej tabeli
-    // Otwórz box o nazwie "weights" (przykładowo)
-    var box = await Hive.openBox<Map>('weights');
+  Future<List<Map<String, dynamic>>> fetchExerciseExecutions(Exercise exercise) async {
+    var box = await Hive.openBox<TrainingCard>('trainingCards');
+    List<Map<String, dynamic>> exerciseExecutions = [];
 
-    // Pobierz dane z bazy, które pasują do ćwiczenia
-    final weights = box.values.where((weightEntry) {
-      return weightEntry['exerciseName'] == exercise.name;
-    }).toList();
+    for (var training in box.values) {
+      for (var trainingExercise in training.exercises) {
+        if (trainingExercise.exercise.name == exercise.name) {
+          for (var set in trainingExercise.sets) {
+            exerciseExecutions.add({
+              'date': training.date.toIso8601String(),
+              'repetitions': set.repetitions ?? 0,
+              'weight': set.weight ?? 0.0,
+            });
+          }
+        }
+      }
+    }
 
-    // Mapuj wyniki na listę map
-    return weights.map((entry) {
-      return {
-        'date': entry['date'],
-        'value': entry['value'],
-      };
-    }).toList();
+    return exerciseExecutions;
   }
 }
