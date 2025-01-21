@@ -25,7 +25,7 @@ class HistoryCard extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           gradient: LinearGradient(
-            colors: [Colors.blue.shade50, Colors.green.shade50], // Gradient
+            colors: [Colors.blue.shade50, Colors.green.shade50],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -51,7 +51,6 @@ class HistoryCard extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Row(
-              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 const Icon(Icons.fitness_center, color: Colors.green),
                 const SizedBox(width: 5),
@@ -63,7 +62,6 @@ class HistoryCard extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Row(
-              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 const Icon(Icons.access_time, color: Colors.black),
                 const SizedBox(width: 5),
@@ -73,25 +71,10 @@ class HistoryCard extends StatelessWidget {
                 ),
               ],
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Waga: $weight',
-                  style: const TextStyle(color: Colors.black),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.arrow_forward_ios, color: Colors.black),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => TrainingDetailScreen(),
-                      ),
-                    );
-                  },
-                ),
-              ],
+            const SizedBox(height: 8),
+            Text(
+              'Waga: $weight',
+              style: const TextStyle(color: Colors.black),
             ),
           ],
         ),
@@ -99,3 +82,4 @@ class HistoryCard extends StatelessWidget {
     );
   }
 }
+

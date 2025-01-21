@@ -19,7 +19,6 @@ class TrainingScreen extends StatefulWidget {
     required this.trainingPlanCard,
   }) : super(key: key);
 
-
   @override
   _TrainingScreenState createState() => _TrainingScreenState();
 }
@@ -33,6 +32,10 @@ class _TrainingScreenState extends State<TrainingScreen> {
   bool isNew = false;
   TextEditingController _controller = TextEditingController();
 
+  // DODAJEMY kontrolery do nazwy planu i opisu treningu
+  TextEditingController _planNameController = TextEditingController();
+  TextEditingController _planDescriptionController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -44,17 +47,18 @@ class _TrainingScreenState extends State<TrainingScreen> {
     final trainingService = Provider.of<TrainingService>(context, listen: false);
     if (widget.flag) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (!trainingService.isTrainingStarted) { // Zapobiegaj wielokrotnemu nadpisywaniu
+        if (!trainingService.isTrainingStarted) {
           trainingService.isTrainingStarted = true;
           trainingService.startTrainingTime();
           trainingService.setTrainingFromPlan(widget.trainingPlanCard);
-          if(widget.trainingPlanCard.exercises.isEmpty){
+          if (widget.trainingPlanCard.exercises.isEmpty) {
             isNew = true;
           }
-        }else{
+        } else {
+          // Już jest rozpoczęty
         }
       });
-    }else{
+    } else {
       trainingService.trainingExercisesList.clear();
       trainingService.isTrainingStarted = false;
     }
@@ -68,7 +72,7 @@ class _TrainingScreenState extends State<TrainingScreen> {
         if (_seconds > 0) {
           setState(() {
             _seconds--;
-            if(_seconds == 0){
+            if (_seconds == 0) {
               _timer?.cancel();
               setState(() {
                 _seconds = int.parse(_controller.text);
@@ -112,6 +116,60 @@ class _TrainingScreenState extends State<TrainingScreen> {
     );
   }
 
+  Future<bool> _showFinishDialog(BuildContext context) async {
+    _planNameController.clear();
+    _planDescriptionController.clear();
+    if (!isNew) {
+      _planNameController.text = 'plan juz istnieje';
+    }
+
+    final result = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Zakończ trening'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (isNew)
+                  TextField(
+                    controller: _planNameController,
+                    decoration: const InputDecoration(
+                      labelText: 'Nazwa planu',
+                    ),
+                  ),
+                TextField(
+                  controller: _planDescriptionController,
+                  decoration: const InputDecoration(
+                    labelText: 'Opis treningu',
+                  ),
+                  maxLines: 2,
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+              child: const Text('Anuluj'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+    return result ?? false;
+  }
+
   @override
   Widget build(BuildContext context) {
     final trainingService = Provider.of<TrainingService>(context);
@@ -142,7 +200,8 @@ class _TrainingScreenState extends State<TrainingScreen> {
                   await Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => ChooseTrainingOptionScreen()),
+                      builder: (context) => ChooseTrainingOptionScreen(),
+                    ),
                   );
                 },
                 style: ElevatedButton.styleFrom(
@@ -174,7 +233,7 @@ class _TrainingScreenState extends State<TrainingScreen> {
                   ),
                   child: Container(
                     alignment: Alignment.center,
-                    constraints: BoxConstraints(
+                    constraints: const BoxConstraints(
                       maxWidth: 300,
                       minHeight: 75,
                     ),
@@ -211,38 +270,46 @@ class _TrainingScreenState extends State<TrainingScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                // PRZYCISK ZAKOŃCZ
                 ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      final exercisesCopy = trainingService.trainingExercisesList
-                          .map((exercise) => exercise.copyWith(
-                        sets: exercise.sets.map((set) => set.copyWith()).toList(),
-                      ))
-                          .toList();
+                  onPressed: () async {
+                    bool confirmed = await _showFinishDialog(context);
+                    if (!confirmed) {
+                      return;
+                    }
 
-                      final completedTraining = TrainingCard(
-                        date: DateTime.now(),
-                        duration: trainingService.trainingTime,
-                        exercises: exercisesCopy, // Przekazanie kopii danych
-                        description: 'Podsumowanie treningu',
-                      );
+                    final String planName = _planNameController.text.trim();
+                    final String trainingDesc = _planDescriptionController.text.trim();
 
-                      print('Completed Training: $completedTraining');
+                    final exercisesCopy = trainingService.trainingExercisesList
+                        .map((exercise) => exercise.copyWith(
+                      sets: exercise.sets.map((set) => set.copyWith()).toList(),
+                    ))
+                        .toList();
 
-                      trainingService.finishAndResetTraining(isNew);
-                      trainingService.isTrainingStarted = false;
+                    final completedTraining = TrainingCard(
+                      date: DateTime.now(),
+                      duration: trainingService.trainingTime,
+                      exercises: exercisesCopy,
+                      description: trainingDesc,
+                    );
 
-                      print(trainingService.trainingExercisesList.length);
+                    print('Completed Training: $completedTraining');
 
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => TrainingSummaryScreen(training: completedTraining),
+                    trainingService.finishAndResetTraining(isNew, planName,trainingDesc);
+                    trainingService.isTrainingStarted = false;
+
+                    print(trainingService.trainingExercisesList.length);
+
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => TrainingSummaryScreen(
+                          training: completedTraining,
                         ),
-                      );
-                    });
+                      ),
+                    );
                   },
-
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFC75361),
                     shape: RoundedRectangleBorder(
@@ -256,6 +323,7 @@ class _TrainingScreenState extends State<TrainingScreen> {
                     style: TextStyle(fontSize: 14, color: Colors.white70),
                   ),
                 ),
+                // Wyswietlanie czasu treningu
                 Column(
                   children: [
                     const Text(
@@ -268,6 +336,7 @@ class _TrainingScreenState extends State<TrainingScreen> {
                     ),
                   ],
                 ),
+                // Czas przerwy
                 GestureDetector(
                   onTap: _editTime,
                   child: Column(
@@ -361,5 +430,3 @@ class _TrainingScreenState extends State<TrainingScreen> {
     );
   }
 }
-
-

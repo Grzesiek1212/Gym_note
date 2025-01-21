@@ -59,10 +59,10 @@ class TrainingService with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> finishAndResetTraining(bool isNew) async {
-    await saveTrainingData();
+  Future<void> finishAndResetTraining(bool isNew, String planName, String descrition) async {
+    await saveTrainingData(descrition);
     if (isNew) {
-      await savePlanTrainingData();
+      await savePlanTrainingData(planName);
     } else {
       // TODO: Aktualizowanie w modelu nowych ciężarów lub zmiana idei w kontekście pobrania ostatnich wyników
     }
@@ -72,12 +72,12 @@ class TrainingService with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> saveTrainingData() async{
+  Future<void> saveTrainingData(String descrition) async{
     final training = TrainingCard(
       exercises: List<TrainingExerciseModel>.from(_trainingExercisesList),
       date: DateTime.now(),
       duration: trainingTime,
-      description: "Fajny trening",
+      description: descrition,
     );
     var trainingBox = await Hive.openBox<TrainingCard>('trainingCards');
     // Save the training card to the database
@@ -85,12 +85,12 @@ class TrainingService with ChangeNotifier {
     print("Zapisano trening: ${training.toMap()}");
   }
 
-  Future<void> savePlanTrainingData() async {
+  Future<void> savePlanTrainingData(String planName) async {
     var trainingPlanBox = await Hive.openBox<TrainingPlanCardModel>('trainingPlans');
 
     final trainingPlan = TrainingPlanCardModel(
       exercises: List<TrainingExerciseModel>.from(_trainingExercisesList),
-      name: "Trening z dnia ${DateTime.now().toIso8601String().split('T').first}",
+      name:  planName,
       createdAt: DateTime.now(),
       type: 'own',
     );

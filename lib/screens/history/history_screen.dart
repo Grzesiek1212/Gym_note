@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../models/training_card_model.dart';
 import '../../services/history_service.dart';
 import '../../widgets/history_card.dart';
+import 'show_training_detail_screen.dart';
 
 class HistoryScreen extends StatefulWidget {
   @override
@@ -30,32 +31,44 @@ class _HistoryScreenState extends State<HistoryScreen> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
+          }
+          if (snapshot.hasError) {
             return Center(child: Text('Błąd: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          }
+          if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return const Center(child: Text('Brak historii treningów.'));
           }
-
           final trainingHistory = snapshot.data!;
-
           return ListView.builder(
             itemCount: trainingHistory.length,
             itemBuilder: (context, index) {
-              var training = trainingHistory[index];
-
-              String formattedDuration = Duration(seconds: training.duration)
+              final training = trainingHistory[index];
+              final formattedDuration = Duration(seconds: training.duration)
                   .toString()
                   .substring(2, 7);
 
-              double totalWeight = training.exercises.fold(0.0, (sum, e) =>
-              sum + e.sets.fold(0.0, (setSum, set) => setSum + set.weight)
+              final totalWeight = training.exercises.fold<double>(
+                0.0,
+                    (sum, exercise) => sum +
+                    exercise.sets.fold<double>(
+                        0.0, (subSum, set) => subSum + set.weight),
               );
 
-              return HistoryCard(
-                date: training.date.toLocal().toString().split(' ')[0].toString(),
-                duration: formattedDuration,
-                exercises: training.exercises.length.toString(),
-                weight: (totalWeight / 1000).toStringAsFixed(2) + 't',
+              return InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => TrainingDetailScreen(training: training),
+                    ),
+                  );
+                },
+                child: HistoryCard(
+                  date: training.date.toLocal().toString().split(' ')[0],
+                  duration: formattedDuration,
+                  exercises: training.exercises.length.toString(),
+                  weight: '${(totalWeight / 1000).toStringAsFixed(2)}t',
+                ),
               );
             },
           );

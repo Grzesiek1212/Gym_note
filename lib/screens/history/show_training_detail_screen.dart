@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
 import '../../models/training_card_model.dart';
 import '../../services/history_service.dart';
+import '../../services/training/training_service.dart';
 import '../../widgets/training_deatils_widget.dart';
 
 class TrainingDetailScreen extends StatelessWidget {
-  final HistoryService historyService = HistoryService();
+  final TrainingService historyService = TrainingService(); // jeśli potrzebujesz
+  final TrainingCard training;  // <= to jest ważne!
 
-  Future<TrainingCard> getTrainingDetails() async {
-    List<TrainingCard> history = await historyService.getTrainingHistory();
-    return history.first;
-  }
+  // Konstruktor przyjmujący training
+  TrainingDetailScreen({
+    Key? key,
+    required this.training,
+  }) : super(key: key);
 
-  void updateDescription(String newDescription, TrainingCard trainingCard) async {
-    final updatedTraining = trainingCard.copyWith(description: newDescription);
-    await historyService.updateTrainingDescription(updatedTraining);
+  void updateDescription(String newDescription) async {
+    // zaktualizuj opis w Hive
+    final updatedTraining = training.copyWith(description: newDescription);
+    await HistoryService().updateTrainingDescription(updatedTraining);
   }
 
   @override
@@ -26,10 +30,7 @@ class TrainingDetailScreen extends StatelessWidget {
             icon: Icon(Icons.share),
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('w produkcji :('),
-                  duration: const Duration(seconds: 2),
-                ),
+                SnackBar(content: Text('w produkcji :(')),
               );
             },
           ),
@@ -37,18 +38,12 @@ class TrainingDetailScreen extends StatelessWidget {
             onSelected: (value) {
               if (value == 'delete') {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('w produkcji :('),
-                    duration: const Duration(seconds: 2),
-                  ),
+                  SnackBar(content: Text('w produkcji :(')),
                 );
                 print('Usuń trening');
               } else if (value == 'repeat') {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('w produkcji :('),
-                    duration: const Duration(seconds: 2),
-                  ),
+                  SnackBar(content: Text('w produkcji :(')),
                 );
                 print('Powtórz trening');
               }
@@ -66,28 +61,15 @@ class TrainingDetailScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: FutureBuilder<TrainingCard>(
-        future: getTrainingDetails(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Wystąpił błąd podczas ładowania danych.'));
-          } else if (!snapshot.hasData || snapshot.data == null) {
-            return Center(child: Text('Brak danych do wyświetlenia.'));
-          }
 
-          final training = snapshot.data!;
-
-          return TrainingDetailsWidget(
-            training: training,
-            isSummary: false,
-            onDescriptionChanged: (newDescription) {
-              updateDescription(newDescription, training);
-            },
-          );
+      body: TrainingDetailsWidget(
+        training: training,
+        isSummary: false,
+        onDescriptionChanged: (newDescription) {
+          updateDescription(newDescription);
         },
       ),
     );
   }
 }
+
