@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../models/training_plan_card_model.dart';
-import '../services/plan_service.dart';
-import '../widgets/plan_card.dart';
+import '../../models/training_plan_card_model.dart';
+import '../../services/plan_service.dart';
+import '../../widgets/plan_card.dart';
 
 class PlanScreen extends StatefulWidget {
   @override

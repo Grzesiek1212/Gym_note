@@ -86,7 +86,7 @@ class TrainingService with ChangeNotifier {
   }
 
   Future<void> savePlanTrainingData(String planName) async {
-    var trainingPlanBox = await Hive.openBox<TrainingPlanCardModel>('trainingPlans');
+    var trainingPlanBox = await Hive.openBox<TrainingPlanCardModel>('trainingPlanCards ');
 
     final trainingPlan = TrainingPlanCardModel(
       exercises: List<TrainingExerciseModel>.from(_trainingExercisesList),

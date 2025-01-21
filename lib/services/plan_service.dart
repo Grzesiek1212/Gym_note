@@ -6,7 +6,12 @@ class PlanService {
   List<TrainingPlanCardModel> plans = [];
 
   Future<List<TrainingPlanCardModel>> getPlans(bool isOwnPlans) async {
-    var box = await Hive.openBox<TrainingPlanCardModel>('trainingPlans');
+    var box = await Hive.openBox<TrainingPlanCardModel>('trainingPlanCards');
+
+    for (var plan in box.values) {
+      print("Nazwa planu: ${plan.name}, Liczba ćwiczeń: ${plan.type}");
+    }
+
 
     final filteredPlans = box.values
         .where((plan) => isOwnPlans ? plan.type == 'own' : plan.type == 'ready')

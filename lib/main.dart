@@ -9,10 +9,11 @@ import 'models/set_model.dart';
 import 'models/training_card_model.dart';
 import 'models/training_exercise_model.dart';
 import 'models/training_plan_card_model.dart';
+import 'screens/plan/ready_plan_data.dart';
 import 'screens/training/training_screen.dart';
 import 'screens/exercise/exercise_screen.dart';
 import 'screens/history/history_screen.dart';
-import 'screens/plan_screen.dart';
+import 'screens/plan/plan_screen.dart';
 import 'screens/profile/profile_screen.dart';
 import 'services/training/training_service.dart';
 
@@ -20,7 +21,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
 
-  await Hive.deleteFromDisk();
+  //await Hive.deleteFromDisk();
 
   Hive.registerAdapter(MeasurementAdapter());
   Hive.registerAdapter(ExerciseAdapter());
@@ -37,6 +38,8 @@ void main() async {
   await Hive.openBox<PhotoModel>('PhotoModels');
 
   await addExercises();
+  await addTrainingPlans();
+
   runApp(
     MultiProvider(
       providers: [
