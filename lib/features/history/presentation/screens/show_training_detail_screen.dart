@@ -5,17 +5,15 @@ import '../../../training/data/services/training_service.dart';
 import '../widgets/training_deatils_widget.dart';
 
 class TrainingDetailScreen extends StatelessWidget {
-  final TrainingService historyService = TrainingService(); // jeśli potrzebujesz
-  final TrainingCard training;  // <= to jest ważne!
+  final TrainingService historyService = TrainingService();
+  final TrainingCard training;
 
-  // Konstruktor przyjmujący training
   TrainingDetailScreen({
     Key? key,
     required this.training,
   }) : super(key: key);
 
   void updateDescription(String newDescription) async {
-    // zaktualizuj opis w Hive
     final updatedTraining = training.copyWith(description: newDescription);
     await HistoryService().updateTrainingDescription(updatedTraining);
   }
@@ -29,6 +27,7 @@ class TrainingDetailScreen extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.share),
             onPressed: () {
+              // TODO: dodac sharownie
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text('w produkcji :(')),
               );
@@ -37,15 +36,11 @@ class TrainingDetailScreen extends StatelessWidget {
           PopupMenuButton<String>(
             onSelected: (value) {
               if (value == 'delete') {
+                // TODO: usuwanie treingu
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text('w produkcji :(')),
                 );
                 print('Usuń trening');
-              } else if (value == 'repeat') {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('w produkcji :(')),
-                );
-                print('Powtórz trening');
               }
             },
             itemBuilder: (context) => [
@@ -53,15 +48,10 @@ class TrainingDetailScreen extends StatelessWidget {
                 value: 'delete',
                 child: Text('Usuń trening'),
               ),
-              PopupMenuItem(
-                value: 'repeat',
-                child: Text('Powtórz trening'),
-              ),
             ],
           ),
         ],
       ),
-
       body: TrainingDetailsWidget(
         training: training,
         isSummary: false,
@@ -72,4 +62,3 @@ class TrainingDetailScreen extends StatelessWidget {
     );
   }
 }
-

@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 
-import '../screens/show_training_detail_screen.dart';
-
-class HistoryCard extends StatelessWidget {
+class HistoryCardWidget extends StatelessWidget {
   final String date;
   final String duration;
   final String exercises;
   final String weight;
 
-  const HistoryCard({
+  const HistoryCardWidget({
     Key? key,
     required this.date,
     required this.duration,
@@ -82,4 +80,3 @@ class HistoryCard extends StatelessWidget {
     );
   }
 }
-

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../../../training/data/models/training_card_model.dart';
 import '../../data/services/history_service.dart';
-import '../widgets/history_card.dart';
+import '../widgets/history_card_widget.dart';
 import 'show_training_detail_screen.dart';
 
 class HistoryScreen extends StatefulWidget {
@@ -16,6 +17,18 @@ class _HistoryScreenState extends State<HistoryScreen> {
   void initState() {
     super.initState();
     _trainingHistoryFuture = HistoryService().getTrainingHistory();
+  }
+
+  String formatDuration(int durationInSeconds) {
+    final duration = Duration(seconds: durationInSeconds);
+    final minutes = duration.inMinutes;
+    final seconds = duration.inSeconds % 60;
+    return '$minutes:${seconds.toString().padLeft(2, '0')}';
+  }
+
+  String formatDate(DateTime date) {
+    final dateFormatter = DateFormat('yyyy-MM-dd');
+    return dateFormatter.format(date);
   }
 
   @override
@@ -43,15 +56,17 @@ class _HistoryScreenState extends State<HistoryScreen> {
             itemCount: trainingHistory.length,
             itemBuilder: (context, index) {
               final training = trainingHistory[index];
-              final formattedDuration = Duration(seconds: training.duration)
-                  .toString()
-                  .substring(2, 7);
+              final formattedDuration = formatDuration(training.duration);
+              final formattedDate = formatDate(training.date);
 
               final totalWeight = training.exercises.fold<double>(
                 0.0,
-                    (sum, exercise) => sum +
+                (sum, exercise) =>
+                    sum +
                     exercise.sets.fold<double>(
-                        0.0, (subSum, set) => subSum + set.weight),
+                      0.0,
+                      (subSum, set) => subSum + set.weight,
+                    ),
               );
 
               return InkWell(
@@ -63,8 +78,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     ),
                   );
                 },
-                child: HistoryCard(
-                  date: training.date.toLocal().toString().split(' ')[0],
+                child: HistoryCardWidget(
+                  date: formattedDate,
                   duration: formattedDuration,
                   exercises: training.exercises.length.toString(),
                   weight: '${(totalWeight / 1000).toStringAsFixed(2)}t',
