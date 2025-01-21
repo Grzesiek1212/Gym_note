@@ -120,7 +120,7 @@ class _TrainingScreenState extends State<TrainingScreen> {
     _planNameController.clear();
     _planDescriptionController.clear();
     if (!isNew) {
-      _planNameController.text = 'plan juz istnieje';
+      _planNameController.text = widget.trainingPlanCard.name;
     }
 
     final result = await showDialog<bool>(

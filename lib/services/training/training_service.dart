@@ -64,7 +64,7 @@ class TrainingService with ChangeNotifier {
     if (isNew) {
       await savePlanTrainingData(planName);
     } else {
-      // TODO: Aktualizowanie w modelu nowych ciężarów lub zmiana idei w kontekście pobrania ostatnich wyników
+      await updatePlanSets(planName);
     }
 
     trainingStartDate = null;
@@ -116,4 +116,45 @@ class TrainingService with ChangeNotifier {
     );
     notifyListeners();
   }
+
+  Future<void> updatePlanSets(String planName) async {
+    var trainingPlanBox = await Hive.openBox<TrainingPlanCardModel>('trainingPlanCards');
+
+    // Znalezienie planu treningowego o podanej nazwie
+    final planIndex = trainingPlanBox.values
+        .toList()
+        .indexWhere((plan) => plan.name == planName);
+
+    if (planIndex == -1) {
+      print("Plan treningowy o nazwie '$planName' nie istnieje.");
+      return;
+    }
+
+    // Pobranie i zaktualizowanie planu
+    final plan = trainingPlanBox.getAt(planIndex);
+
+    if (plan == null) {
+      print("Nie można pobrać planu o nazwie '$planName'.");
+      return;
+    }
+
+    if (trainingExercisesList.length != plan.exercises.length) {
+      print("Nie zgadza się liczba ćwiczeń. Nie można zaktualizować planu '$planName'.");
+      return;
+    }
+
+    for (int i = 0; i < plan.exercises.length; i++) {
+      final exercise = plan.exercises[i];
+      final updatedExercise = exercise.copyWith(sets: trainingExercisesList[i].sets);
+      plan.exercises[i] = updatedExercise;
+    }
+
+    await trainingPlanBox.putAt(
+      planIndex,
+      plan.copyWith(exercises: List<TrainingExerciseModel>.from(plan.exercises)),
+    );
+
+    print("Zaktualizowano dane w planie treningowym '$planName'.");
+  }
+
 }
