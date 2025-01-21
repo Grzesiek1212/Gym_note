@@ -30,6 +30,8 @@ class TrainingService with ChangeNotifier {
     notifyListeners();
   }
 
+
+
   void addExerciseToTraining(Exercise exercise) {
     var newTrainingExercise = TrainingExerciseModel(
       exercise: exercise,
@@ -80,7 +82,6 @@ class TrainingService with ChangeNotifier {
       description: descrition,
     );
     var trainingBox = await Hive.openBox<TrainingCard>('trainingCards');
-    // Save the training card to the database
     await trainingBox.add(training);
     print("Zapisano trening: ${training.toMap()}");
   }
@@ -119,8 +120,6 @@ class TrainingService with ChangeNotifier {
 
   Future<void> updatePlanSets(String planName) async {
     var trainingPlanBox = await Hive.openBox<TrainingPlanCardModel>('trainingPlanCards');
-
-    // Znalezienie planu treningowego o podanej nazwie
     final planIndex = trainingPlanBox.values
         .toList()
         .indexWhere((plan) => plan.name == planName);
@@ -129,8 +128,6 @@ class TrainingService with ChangeNotifier {
       print("Plan treningowy o nazwie '$planName' nie istnieje.");
       return;
     }
-
-    // Pobranie i zaktualizowanie planu
     final plan = trainingPlanBox.getAt(planIndex);
 
     if (plan == null) {
@@ -142,12 +139,10 @@ class TrainingService with ChangeNotifier {
       final updatedExercise = exercise.copyWith(sets: trainingExercisesList[i].sets);
       plan.exercises[i] = updatedExercise;
     }
-
     await trainingPlanBox.putAt(
       planIndex,
       plan.copyWith(exercises: List<TrainingExerciseModel>.from(plan.exercises)),
     );
-
     print("Zaktualizowano dane w planie treningowym '$planName'.");
   }
 

@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import '../../data/models/training_card_model.dart';
 import '../../../plan/data/models/training_plan_card_model.dart';
 import '../../data/services/training_service.dart';
+import '../widgets/exercise_list_widget.dart';
+import '../widgets/finish_training_dialog_widget.dart';
 import '../widgets/training_exercise_panel_widget.dart';
 import 'choose_training_option_screen.dart';
 import 'exercise_training_screen.dart';
@@ -127,43 +129,10 @@ class _TrainingScreenState extends State<TrainingScreen> {
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Zakończ trening'),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (isNew)
-                  TextField(
-                    controller: _planNameController,
-                    decoration: const InputDecoration(
-                      labelText: 'Nazwa planu',
-                    ),
-                  ),
-                TextField(
-                  controller: _planDescriptionController,
-                  decoration: const InputDecoration(
-                    labelText: 'Opis treningu',
-                  ),
-                  maxLines: 2,
-                ),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(false);
-              },
-              child: const Text('Anuluj'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(true);
-              },
-              child: const Text('OK'),
-            ),
-          ],
+        return FinishTrainingDialogWidget(
+          isNew: isNew,
+          nameController: _planNameController,
+          descriptionController: _planDescriptionController,
         );
       },
     );
@@ -296,10 +265,8 @@ class _TrainingScreenState extends State<TrainingScreen> {
 
                     print('Completed Training: $completedTraining');
 
-                    trainingService.finishAndResetTraining(isNew, planName,trainingDesc);
+                    trainingService.finishAndResetTraining(isNew, planName, trainingDesc);
                     trainingService.isTrainingStarted = false;
-
-                    print(trainingService.trainingExercisesList.length);
 
                     Navigator.push(
                       context,
@@ -315,14 +282,14 @@ class _TrainingScreenState extends State<TrainingScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    padding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   ),
                   child: const Text(
                     'ZAKOŃCZ',
                     style: TextStyle(fontSize: 14, color: Colors.white70),
                   ),
                 ),
+
                 // Wyswietlanie czasu treningu
                 Column(
                   children: [
@@ -330,9 +297,17 @@ class _TrainingScreenState extends State<TrainingScreen> {
                       'Czas trwania treningu',
                       style: TextStyle(color: Colors.black),
                     ),
-                    Text(
-                      '$hours:${minutes.toString().padLeft(2, '0')}',
-                      style: const TextStyle(color: Colors.black, fontSize: 24),
+                    Consumer<TrainingService>(
+                      builder: (context, trainingService, child) {
+                        final trainingTime = trainingService.trainingTime;
+                        final hours = trainingTime ~/ 60;
+                        final minutes = trainingTime % 60;
+
+                        return Text(
+                          '$hours:${minutes.toString().padLeft(2, '0')}',
+                          style: const TextStyle(color: Colors.black, fontSize: 24),
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -361,45 +336,17 @@ class _TrainingScreenState extends State<TrainingScreen> {
           Expanded(
             child: trainingExercisesList.isEmpty
                 ? const Center(child: Text("Brak ćwiczeń w treningu"))
-                : Column(
-              children: [
-                Expanded(
-                  child: PageView.builder(
-                    controller: _pageController,
-                    onPageChanged: (index) {
-                      setState(() {
-                        _currentPage = index;
-                      });
-                    },
-                    itemCount: trainingExercisesList.length,
-                    itemBuilder: (context, index) {
-                      final exercise = trainingExercisesList[index];
-                      return ExercisePanelWidget(exercise: exercise);
-                    },
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(
-                    trainingExercisesList.length,
-                        (index) => AnimatedContainer(
-                      duration: const Duration(milliseconds: 300),
-                      margin: const EdgeInsets.symmetric(horizontal: 4),
-                      width: _currentPage == index ? 12 : 8,
-                      height: 8,
-                      decoration: BoxDecoration(
-                        color: _currentPage == index
-                            ? Colors.blue
-                            : Colors.grey,
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+                : ExerciseListWidget(
+              exercises: trainingExercisesList,
+              currentPage: _currentPage,
+              pageController: _pageController,
+              onPageChanged: (index) {
+                setState(() {
+                  _currentPage = index;
+                });
+              },
             ),
           ),
-
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: ElevatedButton(
