@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
-
-import '../../../../main.dart';
-import '../../../plan/data/models/training_plan_card_model.dart';
-import '../../data/services/profile_general_measurement_service.dart';
-
-
+import '../widgets/general_measurements/general_measurement_input_field_widget.dart';
+import '../widgets/general_measurements/save_general_measurements_button_widget.dart';
 
 class AddGeneralMeasurementsScreen extends StatefulWidget {
   const AddGeneralMeasurementsScreen({Key? key}) : super(key: key);
 
   @override
-  _AddGeneralMeasurementsScreenState createState() => _AddGeneralMeasurementsScreenState();
+  _AddGeneralMeasurementsScreenState createState() =>
+      _AddGeneralMeasurementsScreenState();
 }
 
-class _AddGeneralMeasurementsScreenState extends State<AddGeneralMeasurementsScreen> {
+class _AddGeneralMeasurementsScreenState
+    extends State<AddGeneralMeasurementsScreen> {
   final TextEditingController _weightController = TextEditingController();
   final TextEditingController _heightController = TextEditingController();
-  final TextEditingController _fatPercentageController = TextEditingController();
-  final TextEditingController _musclePercentageController = TextEditingController();
+  final TextEditingController _fatPercentageController =
+      TextEditingController();
+  final TextEditingController _musclePercentageController =
+      TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -33,89 +33,38 @@ class _AddGeneralMeasurementsScreenState extends State<AddGeneralMeasurementsScr
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildInputField('Waga (kg)', _weightController),
+              GeneralMeasurementInputFieldWidget(
+                keyName: 'Waga (kg)',
+                controller: _weightController,
+                usePolishLabels: false,
+              ),
               const SizedBox(height: 16),
-              _buildInputField('Wzrost (cm)', _heightController),
+              GeneralMeasurementInputFieldWidget(
+                keyName: 'Wzrost (cm)',
+                controller: _heightController,
+                usePolishLabels: false,
+              ),
               const SizedBox(height: 16),
-              _buildInputField('% Tłuszczu', _fatPercentageController),
+              GeneralMeasurementInputFieldWidget(
+                keyName: '% Tłuszczu',
+                controller: _fatPercentageController,
+                usePolishLabels: false,
+              ),
               const SizedBox(height: 16),
-              _buildInputField('% Mięśni', _musclePercentageController),
+              GeneralMeasurementInputFieldWidget(
+                keyName: '% Mięśni',
+                controller: _musclePercentageController,
+                usePolishLabels: false,
+              ),
               const SizedBox(height: 32),
-              Center(
-                child: ElevatedButton(
-                  onPressed: () async {
-                    final weightText = _weightController.text.trim();
-                    final heightText = _heightController.text.trim();
-                    final fatPercentage = _fatPercentageController.text.trim();
-                    final musclePercentage = _musclePercentageController.text.trim();
-
-                    final weight = double.tryParse(weightText) ?? 0.0;
-                    final height = double.tryParse(heightText) ?? 0.0;
-
-                    final generalMeasurements = {
-                      'weight': weightText.isNotEmpty ? weightText : '-',
-                      'height': heightText.isNotEmpty ? heightText : '-',
-                      'BMI': (weight > 0 && height > 0)
-                          ? (weight / ((height / 100) * (height / 100))).toStringAsFixed(2)
-                          : '-',
-                      'fat': fatPercentage.isNotEmpty ? fatPercentage : '-',
-                      'muscles': musclePercentage.isNotEmpty ? musclePercentage : '-',
-                    };
-
-                    try {
-                      await ProfileGeneralMeasurementService().saveGeneralMeasurements(generalMeasurements);
-
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Dane ogólne zapisane pomyślnie!'),
-                          backgroundColor: Colors.green,
-                        ),
-                      );
-
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => MainNavigationBar(
-                            flag: false,
-                            trainingPlanCard: TrainingPlanCardModel.empty(),
-                            panelNumber: 4,
-                          ),
-                        ),
-                            (route) => false,
-                      );
-                    } catch (error) {
-                      // Obsługa błędu
-                      print('Błąd podczas zapisu danych: $error');
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Nie udało się zapisać danych. Spróbuj ponownie.'),
-                          backgroundColor: Colors.red,
-                        ),
-                      );
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
-                  ),
-                  child: const Text('Zapisz'),
-                ),
+              SaveGeneralMeasurementsButtonWidget(
+                weightController: _weightController,
+                heightController: _heightController,
+                fatPercentageController: _fatPercentageController,
+                musclePercentageController: _musclePercentageController,
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildInputField(String label, TextEditingController controller) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: TextField(
-        controller: controller,
-        keyboardType: TextInputType.number,
-        decoration: InputDecoration(
-          labelText: label,
-          border: const OutlineInputBorder(),
         ),
       ),
     );

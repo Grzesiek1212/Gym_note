@@ -1,6 +1,8 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../../data/services/profile_service.dart';
+import '../widgets/photo/photo_display_widget.dart';
+import '../widgets/photo/photo_navigation_widget.dart';
 
 class UserPhotosScreen extends StatefulWidget {
   const UserPhotosScreen({Key? key}) : super(key: key);
@@ -14,6 +16,8 @@ class _UserPhotosScreenState extends State<UserPhotosScreen> {
   late Future<List<Map<String, String>>> _photosFuture;
   final PageController _pageController = PageController();
   int _currentPage = 0;
+
+  final DateFormat _dateFormatter = DateFormat('yyyy-MM-dd HH:mm:ss');
 
   @override
   void initState() {
@@ -62,66 +66,21 @@ class _UserPhotosScreenState extends State<UserPhotosScreen> {
                       itemCount: photos.length,
                       itemBuilder: (context, index) {
                         final photo = photos[index];
-                        final filePath = photo['url']!;
+                        final date = photo['date'];
+                        final formattedDate = date != null
+                            ? _dateFormatter.format(DateTime.parse(date))
+                            : 'Nieznana data';
 
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0, vertical: 8.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(16.0),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black26,
-                                        blurRadius: 8.0,
-                                        offset: Offset(0, 4),
-                                      ),
-                                    ],
-                                  ),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(16.0),
-                                    child: Image.file(
-                                      File(filePath.replaceFirst('file://', '')),
-                                      fit: BoxFit.cover,
-                                      width: double.infinity,
-                                      errorBuilder: (context, error, stackTrace) {
-                                        return Center(
-                                          child: Text('Błąd podczas ładowania zdjęcia'),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                '${photo['date']!.split('T')[0]} ${photo['date']!.split('T')[1].split('.')[0]}',
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black87,
-                                ),
-                              ),
-                            ],
-                          ),
+                        return PhotoDisplayWidget(
+                          filePath: photo['url']!,
+                          date: formattedDate,
                         );
                       },
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Text(
-                      'Zdjęcie ${_currentPage + 1} z ${photos.length}',
-                      style: const TextStyle(
-                        fontSize: 16,
-                        color: Colors.black87,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                  PhotoNavigationWidget(
+                    currentPage: _currentPage,
+                    totalPhotos: photos.length,
                   ),
                 ],
               );

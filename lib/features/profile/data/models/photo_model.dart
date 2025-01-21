@@ -2,13 +2,13 @@ import 'package:hive/hive.dart';
 
 part 'photo_model.g.dart';
 
-@HiveType(typeId: 7) // Ensure typeId is unique for all models
+@HiveType(typeId: 7)
 class PhotoModel {
   @HiveField(0)
   final String photoURL;
 
   @HiveField(1)
-  final DateTime dateAT ;
+  final DateTime dateAT;
 
   PhotoModel({
     required this.photoURL,

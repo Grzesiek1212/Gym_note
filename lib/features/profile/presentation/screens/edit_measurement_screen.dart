@@ -1,22 +1,25 @@
 import 'package:flutter/material.dart';
-
-import '../../../../main.dart';
-import '../../../plan/data/models/training_plan_card_model.dart';
+import '../widgets/date_selector_widget.dart';
+import '../widgets/body_measurements/measurement_input_field_widget.dart';
 import '../../data/services/profile_measurement_service.dart';
+import '../widgets/body_measurements/save_edit_measurements_button_widget.dart';
 
 class EditMeasurementsScreen extends StatefulWidget {
   const EditMeasurementsScreen({Key? key}) : super(key: key);
 
   @override
-  _EditBodyMeasurementsScreenState createState() => _EditBodyMeasurementsScreenState();
+  _EditBodyMeasurementsScreenState createState() =>
+      _EditBodyMeasurementsScreenState();
 }
 
-class _EditBodyMeasurementsScreenState extends State<EditMeasurementsScreen> {
+class _EditBodyMeasurementsScreenState
+    extends State<EditMeasurementsScreen> {
   final ProfileMeasurementService _profileService = ProfileMeasurementService();
   final Map<String, TextEditingController> _controllers = {};
   bool _isLoading = false;
   String? _selectedDate;
   List<String> _availableDates = [];
+
   @override
   void initState() {
     super.initState();
@@ -102,33 +105,17 @@ class _EditBodyMeasurementsScreenState extends State<EditMeasurementsScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Wybierz datę:',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
-              DropdownButtonFormField<String>(
-                value: _selectedDate,
-                items: _availableDates.map((date) {
-                  return DropdownMenuItem(
-                    value: date,
-                    child: Text(date),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  if (value != null) {
-                    setState(() {
-                      _selectedDate = value;
-                    });
-                    _fetchDataByDate(value);
-                  }
+              DateSelectorWidget(
+                availableDates: _availableDates,
+                selectedDate: _selectedDate,
+                onDateSelected: (date) {
+                  setState(() {
+                    _selectedDate = date;
+                  });
+                  _fetchDataByDate(date);
                 },
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Data',
-                ),
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 16),
               if (_isLoading)
                 const Center(child: CircularProgressIndicator())
               else ...[
@@ -138,73 +125,16 @@ class _EditBodyMeasurementsScreenState extends State<EditMeasurementsScreen> {
                 ),
                 const SizedBox(height: 8),
                 ..._controllers.keys.map((key) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: TextField(
-                      controller: _controllers[key],
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                        labelText: key,
-                        border: const OutlineInputBorder(),
-                      ),
-                    ),
+                  return MeasurementInputFieldWidget(
+                    keyName: key,
+                    controller: _controllers[key]!,
                   );
                 }).toList(),
                 const SizedBox(height: 32),
-                Center(
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      final updatedMeasurements = _controllers.map((key, controller) {
-                        return MapEntry(key, controller.text);
-                      });
-
-                      if (_selectedDate == null) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Wybierz datę przed zapisaniem danych'),
-                            backgroundColor: Colors.red,
-                          ),
-                        );
-                        return;
-                      }
-
-                      try {
-                        await _profileService.updateMeasurements(
-                          date: _selectedDate!,
-                          measurements: updatedMeasurements,
-                        );
-
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Dane zapisane pomyślnie!'),
-                            backgroundColor: Colors.green,
-                          ),
-                        );
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MainNavigationBar(
-                              flag: false,
-                              trainingPlanCard: TrainingPlanCardModel.empty(),
-                              panelNumber: 4,
-                            ),
-                          ),
-                              (route) => false,
-                        );
-                      } catch (error) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Błąd podczas zapisu danych. Spróbuj ponownie.'),
-                            backgroundColor: Colors.red,
-                          ),
-                        );
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                    ),
-                    child: const Text('Zapisz dane'),
-                  ),
+                SaveEditMeasurementsButtonWidget(
+                  selectedDate: _selectedDate,
+                  controllers: _controllers,
+                  profileService: _profileService,
                 ),
               ],
             ],

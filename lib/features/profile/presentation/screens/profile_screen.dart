@@ -3,11 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../../data/services/profile_service.dart';
+import '../widgets/body_measurements/body_measurement_row_widget.dart';
+import '../widgets/general_measurements/general_data_row_widget.dart';
+import '../widgets/photo/profile_photo_section_widget.dart';
+import '../widgets/section_header_widget.dart';
 import 'add_general_measurement_screen.dart';
 import 'add_measurement_screen.dart';
 import 'edit_general_measurements_screen.dart';
 import 'edit_measurement_screen.dart';
-import 'section_detail_screen.dart';
 import 'user_photos_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -83,169 +86,124 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'Dane ogólne',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                    SectionHeaderWidget(
+                      title: 'Dane ogólne',
+                      onEdit: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                            const EditGeneralMeasurementsScreen(),
                           ),
-                        ),
-                        Row(
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.edit, color: Colors.blue),
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        const EditGeneralMeasurementsScreen(),
-                                  ),
-                                );
-                              },
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.add, color: Colors.green),
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        const AddGeneralMeasurementsScreen(),
-                                  ),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      ],
+                        );
+                      },
+                      onAdd: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                            const AddGeneralMeasurementsScreen(),
+                          ),
+                        );
+                      },
                     ),
                     const SizedBox(height: 8),
-                    _buildGeneralDataRow(context, 'Waga',
-                        '${data['weight']} kg', Icons.arrow_forward),
-                    _buildGeneralDataRow(context, 'Wzrost',
-                        '${data['height']} cm', Icons.arrow_forward),
-                    _buildGeneralDataRow(
-                        context, 'BMI', '${data['BMI']}', Icons.arrow_forward),
-                    _buildGeneralDataRow(context, 'Tłuszcz', '${data['fat']} %',
-                        Icons.arrow_forward),
-                    _buildGeneralDataRow(context, 'Mięśnie',
-                        '${data['muscles']} %', Icons.arrow_forward),
+                    GeneralDataRowWidget(
+                      label: 'Waga',
+                      value: '${data['weight']} kg',
+                      icon: Icons.arrow_forward,
+                    ),
+                    GeneralDataRowWidget(
+                      label: 'Wzrost',
+                      value: '${data['height']} cm',
+                      icon: Icons.arrow_forward,
+                    ),
+                    GeneralDataRowWidget(
+                      label: 'BMI',
+                      value: '${data['BMI']}',
+                      icon: Icons.arrow_forward,
+                    ),
+                    GeneralDataRowWidget(
+                      label: 'Tłuszcz',
+                      value: '${data['fat']} %',
+                      icon: Icons.arrow_forward,
+                    ),
+                    GeneralDataRowWidget(
+                      label: 'Mięśnie',
+                      value: '${data['muscles']} %',
+                      icon: Icons.arrow_forward,
+                    ),
                     const SizedBox(height: 16),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'Pomiary ciała',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                    SectionHeaderWidget(
+                      title: 'Pomiary ciała',
+                      onEdit: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                            const EditMeasurementsScreen(),
                           ),
-                        ),
-                        Row(
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.edit, color: Colors.blue),
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        const EditMeasurementsScreen(),
-                                  ),
-                                );
-                              },
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.add, color: Colors.green),
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        const AddMeasurementScreen(),
-                                  ),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      ],
+                        );
+                      },
+                      onAdd: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                            const AddMeasurementScreen(),
+                          ),
+                        );
+                      },
                     ),
                     const SizedBox(height: 8),
-                    _buildBodyMeasurementRow(
-                        context, 'Klatka piersiowa', '${data['chest']} cm'),
-                    _buildBodyMeasurementRow(
-                        context, 'Lewy biceps', '${data['leftBiceps']} cm'),
-                    _buildBodyMeasurementRow(
-                        context, 'Prawy biceps', '${data['rightBiceps']} cm'),
-                    _buildBodyMeasurementRow(
-                        context, 'Lewe przedramie', '${data['leftForearm']} cm'),
-                    _buildBodyMeasurementRow(
-                        context, 'Prawe przedramie', '${data['rightForearm']} cm'),
-                    _buildBodyMeasurementRow(
-                        context, 'Talia', '${data['waist']} cm'),
-                    _buildBodyMeasurementRow(
-                        context, 'Biodra', '${data['hips']} cm'),
-                    _buildBodyMeasurementRow(
-                        context, 'Udo', '${data['thigh']} cm'),
-                    _buildBodyMeasurementRow(
-                        context, 'Łydka', '${data['calf']} cm'),
+                    BodyMeasurementRowWidget(
+                      label: 'Klatka piersiowa',
+                      value: '${data['chest']} cm',
+                    ),
+                    BodyMeasurementRowWidget(
+                      label: 'Lewy biceps',
+                      value: '${data['leftBiceps']} cm',
+                    ),
+                    BodyMeasurementRowWidget(
+                      label: 'Prawy biceps',
+                      value: '${data['rightBiceps']} cm',
+                    ),
+                    BodyMeasurementRowWidget(
+                      label: 'Lewe przedramie',
+                      value: '${data['leftForearm']} cm',
+                    ),
+                    BodyMeasurementRowWidget(
+                      label: 'Prawe przedramie',
+                      value: '${data['rightForearm']} cm',
+                    ),
+                    BodyMeasurementRowWidget(
+                      label: 'Talia',
+                      value: '${data['waist']} cm',
+                    ),
+                    BodyMeasurementRowWidget(
+                      label: 'Biodra',
+                      value: '${data['hips']} cm',
+                    ),
+                    BodyMeasurementRowWidget(
+                      label: 'Udo',
+                      value: '${data['thigh']} cm',
+                    ),
+                    BodyMeasurementRowWidget(
+                      label: 'Łydka',
+                      value: '${data['calf']} cm',
+                    ),
                     const SizedBox(height: 16),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Zdjęcie sylwetki',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                    ProfilePhotoSectionWidget(
+                      image: _image,
+                      onTakePicture: _takePicture,
+                      onViewPhotos: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const UserPhotosScreen(),
                           ),
-                        ),
-                        const SizedBox(height: 8),
-                        if (_image != null)
-                          Image.file(
-                            _image!,
-                            height: 200,
-                            width: double.infinity,
-                            fit: BoxFit.cover,
-                          ),
-                        const SizedBox(height: 8),
-                        ElevatedButton.icon(
-                          icon: const Icon(
-                            Icons.camera_alt,
-                            color: Colors.green,
-                          ),
-                          label: const Text(
-                            'Zrób zdjęcie',
-                            style: TextStyle(color: Colors.black54),
-                          ),
-                          onPressed: _takePicture,
-                        ),
-                        const SizedBox(height: 16),
-                        ElevatedButton.icon(
-                          icon: const Icon(
-                            Icons.photo_album,
-                            color: Colors.green,
-                          ),
-                          label: const Text(
-                            'Zobacz zdjęcia użytkownika',
-                            style: TextStyle(color: Colors.black54),
-                          ),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const UserPhotosScreen(), // Nowy ekran
-                              ),
-                            );
-                          },
-                        ),
-                      ],
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -255,97 +213,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             return const Center(child: Text('Brak danych.'));
           }
         },
-      ),
-    );
-  }
-
-  Widget _buildGeneralDataRow(
-      BuildContext context, String label, String value, IconData? icon) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            label,
-            style: const TextStyle(fontSize: 16),
-          ),
-          Row(
-            children: [
-              Text(
-                value,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              if (icon != null) ...[
-                const SizedBox(width: 4),
-                IconButton(
-                  icon: Icon(
-                    icon,
-                    color: Colors.grey,
-                    size: 18,
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            SectionDetailScreen(section: label),
-                      ),
-                    );
-                  },
-                ),
-              ],
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildBodyMeasurementRow(
-      BuildContext context, String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        children: [
-          Icon(
-            Icons.fitness_center,
-            size: 24,
-            color: Colors.grey,
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              label,
-              style: const TextStyle(fontSize: 16),
-            ),
-          ),
-          Text(
-            value,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          IconButton(
-            icon: const Icon(
-              Icons.arrow_forward,
-              color: Colors.grey,
-              size: 18,
-            ),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => SectionDetailScreen(section: label),
-                ),
-              );
-            },
-          ),
-        ],
       ),
     );
   }

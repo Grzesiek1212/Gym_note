@@ -1,7 +1,6 @@
 import 'package:hive/hive.dart';
 import '../models/measurement_model.dart';
 
-
 class ProfileMeasurementService {
   Future<void> saveMeasurements(Map<String, String> Measurements) async {
     var box = await Hive.openBox<Measurement>('measurements');
@@ -24,15 +23,25 @@ class ProfileMeasurementService {
 
     print('Zapisano dane : $Measurements');
   }
+
   Future<Map<String, String>> fetchMeasurementsByDate(String date) async {
     var box = await Hive.openBox<Measurement>('measurements');
 
     final filteredMeasurements = box.values
         .where((measurement) =>
-    measurement.date.toIso8601String().split('T')[0] == date)
-        .where((measurement) =>
-        ['chest', 'leftBiceps', 'rightBiceps', 'BMI', 'leftForearm',
-          'rightForearm', 'waist', 'hips', 'thigh', 'calf',].contains(measurement.type))
+            measurement.date.toIso8601String().split('T')[0] == date)
+        .where((measurement) => [
+              'chest',
+              'leftBiceps',
+              'rightBiceps',
+              'BMI',
+              'leftForearm',
+              'rightForearm',
+              'waist',
+              'hips',
+              'thigh',
+              'calf',
+            ].contains(measurement.type))
         .toList();
 
     final result = {
@@ -43,7 +52,6 @@ class ProfileMeasurementService {
     return result;
   }
 
-
   Future<void> updateMeasurements({
     required String date,
     required Map<String, String> measurements,
@@ -52,9 +60,8 @@ class ProfileMeasurementService {
 
     final existingMeasurements = box.values
         .where((measurement) =>
-    measurement.date.toIso8601String().split('T')[0] == date)
-        .where((measurement) =>
-        measurements.keys.contains(measurement.type))
+            measurement.date.toIso8601String().split('T')[0] == date)
+        .where((measurement) => measurements.keys.contains(measurement.type))
         .toList();
 
     for (var measurement in existingMeasurements) {
@@ -73,6 +80,7 @@ class ProfileMeasurementService {
 
     print('Zaktualizowano dane : $measurements dla daty: $date');
   }
+
   Future<List<String>> fetchAvailableDates() async {
     var box = await Hive.openBox<Measurement>('measurements');
     String type = 'chest';
@@ -85,5 +93,4 @@ class ProfileMeasurementService {
     print('Dates with type "$type": $datesWithType');
     return datesWithType;
   }
-
 }

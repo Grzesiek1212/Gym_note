@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../../../main.dart';
-import '../../../plan/data/models/training_plan_card_model.dart';
+import '../widgets/date_selector_widget.dart';
+import '../widgets/general_measurements/general_measurement_input_field_widget.dart';
 import '../../data/services/profile_general_measurement_service.dart';
+import '../widgets/general_measurements/save_edit_general_measurements_button_widget.dart';
 
 class EditGeneralMeasurementsScreen extends StatefulWidget {
   const EditGeneralMeasurementsScreen({Key? key}) : super(key: key);
@@ -10,12 +11,14 @@ class EditGeneralMeasurementsScreen extends StatefulWidget {
   _EditMeasurementsScreenState createState() => _EditMeasurementsScreenState();
 }
 
-class _EditMeasurementsScreenState extends State<EditGeneralMeasurementsScreen> {
-  final ProfileGeneralMeasurementService _profileService = ProfileGeneralMeasurementService();
+class _EditMeasurementsScreenState
+    extends State<EditGeneralMeasurementsScreen> {
+  final ProfileGeneralMeasurementService _profileService =
+      ProfileGeneralMeasurementService();
   final Map<String, TextEditingController> _controllers = {};
   bool _isLoading = false;
-  String? _selectedDate; // Wybrana data
-  List<String> _availableDates = []; // Lista dostępnych dat
+  String? _selectedDate;
+  List<String> _availableDates = [];
 
   @override
   void initState() {
@@ -24,7 +27,7 @@ class _EditMeasurementsScreenState extends State<EditGeneralMeasurementsScreen> 
     for (var key in initialKeys) {
       _controllers[key] = TextEditingController();
     }
-    _fetchAvailableDates(); // Pobierz dostępne daty przy inicjalizacji
+    _fetchAvailableDates();
   }
 
   @override
@@ -55,7 +58,8 @@ class _EditMeasurementsScreenState extends State<EditGeneralMeasurementsScreen> 
     });
 
     try {
-      final measurements = await _profileService.fetchGeneralMeasurementsByDate(date);
+      final measurements =
+          await _profileService.fetchGeneralMeasurementsByDate(date);
       setState(() {
         measurements.forEach((key, value) {
           if (_controllers.containsKey(key)) {
@@ -91,33 +95,17 @@ class _EditMeasurementsScreenState extends State<EditGeneralMeasurementsScreen> 
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Wybierz datę:',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
-              DropdownButtonFormField<String>(
-                value: _selectedDate,
-                items: _availableDates.map((date) {
-                  return DropdownMenuItem(
-                    value: date,
-                    child: Text(date),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  if (value != null) {
-                    setState(() {
-                      _selectedDate = value;
-                    });
-                    _fetchDataByDate(value);
-                  }
+              DateSelectorWidget(
+                availableDates: _availableDates,
+                selectedDate: _selectedDate,
+                onDateSelected: (date) {
+                  setState(() {
+                    _selectedDate = date;
+                  });
+                  _fetchDataByDate(date);
                 },
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Data',
-                ),
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 16),
               if (_isLoading)
                 const Center(child: CircularProgressIndicator())
               else ...[
@@ -127,73 +115,16 @@ class _EditMeasurementsScreenState extends State<EditGeneralMeasurementsScreen> 
                 ),
                 const SizedBox(height: 8),
                 ..._controllers.keys.map((key) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: TextField(
-                      controller: _controllers[key],
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                        labelText: key,
-                        border: const OutlineInputBorder(),
-                      ),
-                    ),
+                  return GeneralMeasurementInputFieldWidget(
+                    keyName: key,
+                    controller: _controllers[key]!,
                   );
                 }).toList(),
                 const SizedBox(height: 32),
-                Center(
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      final updatedMeasurements = _controllers.map((key, controller) {
-                        return MapEntry(key, controller.text);
-                      });
-
-                      if (_selectedDate == null) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Wybierz datę przed zapisaniem danych'),
-                            backgroundColor: Colors.red,
-                          ),
-                        );
-                        return;
-                      }
-
-                      try {
-                        await _profileService.updateGeneralMeasurements(
-                          date: _selectedDate!,
-                          measurements: updatedMeasurements,
-                        );
-
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Dane zapisane pomyślnie!'),
-                            backgroundColor: Colors.green,
-                          ),
-                        );
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MainNavigationBar(
-                              flag: false,
-                              trainingPlanCard: TrainingPlanCardModel.empty(),
-                              panelNumber: 4,
-                            ),
-                          ),
-                              (route) => false,
-                        );
-                      } catch (error) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Błąd podczas zapisu danych. Spróbuj ponownie.'),
-                            backgroundColor: Colors.red,
-                          ),
-                        );
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                    ),
-                    child: const Text('Zapisz dane'),
-                  ),
+                SaveEditGeneralMeasurementsButtonWidget(
+                  selectedDate: _selectedDate,
+                  controllers: _controllers,
+                  profileService: _profileService,
                 ),
               ],
             ],

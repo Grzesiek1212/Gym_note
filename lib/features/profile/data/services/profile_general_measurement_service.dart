@@ -2,8 +2,8 @@ import 'package:gym_note/features/profile/data/models/measurement_model.dart';
 import 'package:hive/hive.dart';
 
 class ProfileGeneralMeasurementService {
-
-  Future<void> saveGeneralMeasurements(Map<String, String> generalMeasurements) async {
+  Future<void> saveGeneralMeasurements(
+      Map<String, String> generalMeasurements) async {
     var box = await Hive.openBox<Measurement>('measurements');
 
     for (var entry in generalMeasurements.entries) {
@@ -25,14 +25,15 @@ class ProfileGeneralMeasurementService {
     print('Zapisano dane ogólne: $generalMeasurements');
   }
 
-  Future<Map<String, String>> fetchGeneralMeasurementsByDate(String date) async {
+  Future<Map<String, String>> fetchGeneralMeasurementsByDate(
+      String date) async {
     var box = await Hive.openBox<Measurement>('measurements');
 
     final filteredMeasurements = box.values
         .where((measurement) =>
-    measurement.date.toIso8601String().split('T')[0] == date)
+            measurement.date.toIso8601String().split('T')[0] == date)
         .where((measurement) =>
-        ['weight', 'height', 'fat', 'muscles'].contains(measurement.type))
+            ['weight', 'height', 'fat', 'muscles'].contains(measurement.type))
         .toList();
 
     final result = {
@@ -51,9 +52,8 @@ class ProfileGeneralMeasurementService {
 
     final existingMeasurements = box.values
         .where((measurement) =>
-    measurement.date.toIso8601String().split('T')[0] == date)
-        .where((measurement) =>
-        measurements.keys.contains(measurement.type))
+            measurement.date.toIso8601String().split('T')[0] == date)
+        .where((measurement) => measurements.keys.contains(measurement.type))
         .toList();
 
     for (var measurement in existingMeasurements) {
@@ -85,6 +85,4 @@ class ProfileGeneralMeasurementService {
     print('Dates with type "$type": $datesWithType');
     return datesWithType;
   }
-
-
 }

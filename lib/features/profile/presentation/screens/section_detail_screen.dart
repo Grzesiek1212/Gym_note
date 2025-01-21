@@ -1,7 +1,7 @@
-//import 'package:fl_chart/fl_chart.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import '../../data/services/profile_service.dart';
+import '../widgets/line_chart_widget.dart';
+import '../widgets/measurement_list_widget.dart';
 
 class SectionDetailScreen extends StatefulWidget {
   final String section;
@@ -20,10 +20,6 @@ class _SectionDetailScreenState extends State<SectionDetailScreen> {
   void initState() {
     super.initState();
     _measurementsFuture = _profileService.fetchMeasurementsByType(widget.section);
-  }
-
-  void GetTypeSection(String section){
-
   }
 
   @override
@@ -48,22 +44,9 @@ class _SectionDetailScreenState extends State<SectionDetailScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildChart(measurements),
+                  LineChartWidget(measurements: measurements),
                   const SizedBox(height: 16),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: measurements.length,
-                      itemBuilder: (context, index) {
-                        final measurement = measurements[index];
-                        return Card(
-                          child: ListTile(
-                            title: Text('${measurement['value']} ${measurement['type']}'),
-                            subtitle: Text('Data: ${measurement['date']}'),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
+                  MeasurementListWidget(measurements: measurements),
                 ],
               ),
             );
@@ -74,103 +57,4 @@ class _SectionDetailScreenState extends State<SectionDetailScreen> {
       ),
     );
   }
-
-
-  Widget _buildChart(List<Map<String, dynamic>> measurements) {
-    final spots = measurements.asMap().entries.map((entry) {
-      final index = entry.key;
-      final value = (entry.value['value'] as num).toDouble();
-      return FlSpot(index.toDouble(), value);
-    }).toList();
-
-    return SizedBox(
-      height: 250,
-      child: LineChart(
-        LineChartData(
-          gridData: FlGridData(
-            show: true,
-            drawHorizontalLine: true,
-            drawVerticalLine: false,
-            getDrawingHorizontalLine: (value) {
-              return FlLine(
-                color: Colors.grey.shade300,
-                strokeWidth: 1,
-              );
-            },
-          ),
-          titlesData: FlTitlesData(
-            leftTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: true,
-                reservedSize: 40,
-                getTitlesWidget: (value, meta) {
-                  return Text(
-                    value.toStringAsFixed(1),
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 12,
-                    ),
-                  );
-                },
-              ),
-            ),
-            rightTitles: AxisTitles(
-              sideTitles: SideTitles(showTitles: false),
-            ),
-            topTitles: AxisTitles(
-              sideTitles: SideTitles(showTitles: false),
-            ),
-            bottomTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: true,
-                reservedSize: 50,
-                interval: measurements.length > 10 ? 2 : 1,
-                getTitlesWidget: (value, meta) {
-                  final index = value.toInt();
-                  if (index >= 0 && index < measurements.length) {
-                    final date = measurements[index]['date'] ?? '';
-                    return Text(
-                      date.substring(5),
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 10,
-                      ),
-                      textAlign: TextAlign.center,
-                    );
-                  }
-                  return const Text('');
-                },
-              ),
-            ),
-          ),
-          borderData: FlBorderData(
-            show: true,
-            border: Border.all(color: Colors.grey.shade400, width: 1),
-          ),
-          lineBarsData: [
-            LineChartBarData(
-              spots: spots,
-              isCurved: true,
-              gradient: LinearGradient(
-                colors: [Colors.orange, Colors.deepOrange],
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-              ),
-              barWidth: 4,
-              belowBarData: BarAreaData(
-                show: true,
-                gradient: LinearGradient(
-                  colors: [Colors.orange.withOpacity(0.2), Colors.transparent],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                ),
-              ),
-              dotData: FlDotData(show: true),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
 }

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-
-import '../../../../main.dart';
-import '../../../plan/data/models/training_plan_card_model.dart';
-import '../../data/services/profile_measurement_service.dart';
+import '../widgets/body_measurements/measurement_input_field_widget.dart';
+import '../widgets/body_measurements/save_measurements_button_widget.dart';
+import '../widgets/section_title_widget.dart';
 
 class AddMeasurementScreen extends StatefulWidget {
   const AddMeasurementScreen({Key? key}) : super(key: key);
@@ -36,108 +35,34 @@ class _AddMeasurementScreenState extends State<AddMeasurementScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildSectionTitle('Górna część ciała'),
-              _buildInputField('Klatka piersiowa (cm)', _chestController),
-              _buildInputField('Biceps lewy (cm)', _leftBicepsController),
-              _buildInputField('Biceps prawy (cm)', _rightBicepsController),
-              _buildInputField('Przedramię lewe (cm)', _leftForearmController),
-              _buildInputField('Przedramię prawe (cm)', _rightForearmController),
+              const SectionTitleWidget(title: 'Górna część ciała'),
+              MeasurementInputFieldWidget(keyName: 'Klatka piersiowa (cm)', controller: _chestController, usePolishLabels: false),
+              MeasurementInputFieldWidget(keyName: 'Biceps lewy (cm)', controller: _leftBicepsController, usePolishLabels: false),
+              MeasurementInputFieldWidget(keyName: 'Biceps prawy (cm)', controller: _rightBicepsController, usePolishLabels: false),
+              MeasurementInputFieldWidget(keyName: 'Przedramię lewe (cm)', controller: _leftForearmController, usePolishLabels: false),
+              MeasurementInputFieldWidget(keyName: 'Przedramię prawe (cm)', controller: _rightForearmController, usePolishLabels: false),
               const SizedBox(height: 16),
-              _buildSectionTitle('Środek ciała'),
-              _buildInputField('Brzuch (cm)', _waistController),
-              _buildInputField('Biodra (cm)', _hipsController),
+              const SectionTitleWidget(title: 'Środek ciała'),
+              MeasurementInputFieldWidget(keyName: 'Brzuch (cm)', controller: _waistController, usePolishLabels: false),
+              MeasurementInputFieldWidget(keyName: 'Biodra (cm)', controller: _hipsController, usePolishLabels: false),
               const SizedBox(height: 16),
-              _buildSectionTitle('Dolna część ciała'),
-              _buildInputField('Uda (cm)', _thighController),
-              _buildInputField('Łydka (cm)', _calfController),
+              const SectionTitleWidget(title: 'Dolna część ciała'),
+              MeasurementInputFieldWidget(keyName: 'Uda (cm)', controller: _thighController, usePolishLabels: false),
+              MeasurementInputFieldWidget(keyName: 'Łydka (cm)', controller: _calfController, usePolishLabels: false),
               const SizedBox(height: 32),
-              Center(
-                child: ElevatedButton(
-                  onPressed: () async {
-                    final chest = _chestController.text;
-                    final leftBiceps = _leftBicepsController.text;
-                    final rightBiceps = _rightBicepsController.text;
-                    final leftForearm = _leftForearmController.text;
-                    final rightForearm = _rightForearmController.text;
-                    final waist = _waistController.text;
-                    final hips = _hipsController.text;
-                    final thigh = _thighController.text;
-                    final calf = _calfController.text;
-
-                    // Tworzenie mapy z danymi do zapisania
-                    final measurements = {
-                      'chest': chest,
-                      'leftBiceps': leftBiceps,
-                      'rightBiceps': rightBiceps,
-                      'leftForearm': leftForearm,
-                      'rightForearm': rightForearm,
-                      'waist': waist,
-                      'hips': hips,
-                      'thigh': thigh,
-                      'calf': calf,
-                    };
-
-                    try {
-                      await ProfileMeasurementService().saveMeasurements(measurements);
-
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Pomiary zapisane pomyślnie!'),
-                          backgroundColor: Colors.green,
-                        ),
-                      );
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => MainNavigationBar(
-                            flag: false,
-                            trainingPlanCard: TrainingPlanCardModel.empty(),
-                            panelNumber: 4,
-                          ),
-                        ),
-                            (route) => false,
-                      );
-                    } catch (error) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Nie udało się zapisać danych. Spróbuj ponownie.')),
-                      );
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
-                  ),
-                  child: const Text('Zapisz'),
-                ),
+              SaveMeasurementsButtonWidget(
+                chestController: _chestController,
+                leftBicepsController: _leftBicepsController,
+                rightBicepsController: _rightBicepsController,
+                leftForearmController: _leftForearmController,
+                rightForearmController: _rightForearmController,
+                waistController: _waistController,
+                hipsController: _hipsController,
+                thighController: _thighController,
+                calfController: _calfController,
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildInputField(String label, TextEditingController controller) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: TextField(
-        controller: controller,
-        keyboardType: TextInputType.number,
-        decoration: InputDecoration(
-          labelText: label,
-          border: const OutlineInputBorder(),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSectionTitle(String title) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Text(
-        title,
-        style: const TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
         ),
       ),
     );

@@ -1,21 +1,19 @@
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:gym_note/features/profile/data/models/photo_model.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
-
 import '../models/measurement_model.dart';
 
 class ProfileService {
-
   Future<Map<String, dynamic>> fetchLatestMeasurements() async {
     var box = await Hive.openBox<Measurement>('measurements');
 
     for (var key in box.keys) {
       final measurement = box.get(key);
       if (measurement != null) {
-        print('Key: $key, Type: ${measurement.type}, Value: ${measurement.value}');
+        print(
+            'Key: $key, Type: ${measurement.type}, Value: ${measurement.value}');
       } else {
         print('Key: $key has a null value in the box.');
       }
@@ -54,7 +52,8 @@ class ProfileService {
     return latestMeasurements;
   }
 
-  Future<List<Map<String, dynamic>>> fetchMeasurementsByType(String type) async {
+  Future<List<Map<String, dynamic>>> fetchMeasurementsByType(
+      String type) async {
     var box = await Hive.openBox<Measurement>('measurements');
     final measurementType = await getNameOfSection(type);
     final unit = await getMeasurementUnit(measurementType);
@@ -62,10 +61,10 @@ class ProfileService {
     final filteredMeasurements = box.values
         .where((measurement) => measurement.type == measurementType)
         .map((measurement) => {
-      'value': measurement.value,
-      'date': measurement.date.toString().split(' ')[0],
-      'type': unit,
-    })
+              'value': measurement.value,
+              'date': measurement.date.toString().split(' ')[0],
+              'type': unit,
+            })
         .toList();
 
     return filteredMeasurements;
@@ -122,7 +121,6 @@ class ProfileService {
     debugPrint('Zdjęcie zapisane lokalnie: ${savedImage.path}');
   }
 
-
   Future<String> getNameOfSection(String type) async {
     const sectionNames = {
       'Waga': 'weight',
@@ -142,6 +140,4 @@ class ProfileService {
     };
     return sectionNames[type] ?? '';
   }
-
-
 }
