@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../screens/exercise_detail_screen.dart';
 import '../../data/models/exercise_model.dart';
 import '../../../training/data/services/training_service.dart';
@@ -30,24 +29,24 @@ class ExerciseGridListWidget extends StatelessWidget {
 
         return GestureDetector(
           onTap: () {
-          if (isTrainingScreen) {
-            Provider.of<TrainingService>(context, listen: false)
-                .addExerciseToTraining(exercise);
+            if (isTrainingScreen) {
+              Provider.of<TrainingService>(context, listen: false)
+                  .addExerciseToTraining(exercise);
 
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Dodano ćwiczenie: ${exercise.name}'),
-                duration: const Duration(seconds: 2),
-              ),
-            );
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Dodano ćwiczenie: ${exercise.name}'),
+                  duration: const Duration(seconds: 2),
+                ),
+              );
 
-            Navigator.popUntil(context, (route) => route.isFirst);
-          }
-          else {
+              Navigator.popUntil(context, (route) => route.isFirst);
+            } else {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ExerciseDetailScreen(exercise: exercise),
+                  builder: (context) =>
+                      ExerciseDetailScreen(exercise: exercise),
                 ),
               );
             }
@@ -59,11 +58,13 @@ class ExerciseGridListWidget extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.fitness_center, size: 48.0, color: Colors.blueGrey),
+                const Icon(Icons.fitness_center,
+                    size: 48.0, color: Colors.blueGrey),
                 const SizedBox(height: 8),
                 Text(
                   exercise.name,
-                  style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      fontSize: 16.0, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),
               ],

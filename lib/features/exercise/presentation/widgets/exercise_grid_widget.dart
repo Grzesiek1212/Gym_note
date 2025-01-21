@@ -19,7 +19,8 @@ class ExerciseGridWidget extends StatelessWidget {
     {'name': 'Kardio', 'image': 'assets/cardio.png'},
   ];
 
-  ExerciseGridWidget({Key? key, required this.isTrainingScreen}) : super(key: key);
+  ExerciseGridWidget({Key? key, required this.isTrainingScreen})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -40,14 +41,16 @@ class ExerciseGridWidget extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ExerciseTrainingListScreen(name: exercise['name']),
+                  builder: (context) =>
+                      ExerciseTrainingListScreen(name: exercise['name']),
                 ),
               );
             } else {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ExerciseListScreen(name: exercise['name']),
+                  builder: (context) =>
+                      ExerciseListScreen(name: exercise['name']),
                 ),
               );
             }

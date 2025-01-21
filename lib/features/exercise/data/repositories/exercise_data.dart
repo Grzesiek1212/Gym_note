@@ -1,5 +1,4 @@
 import 'package:hive/hive.dart';
-
 import '../models/exercise_model.dart';
 
 Future<void> addExercises() async {
@@ -13,7 +12,8 @@ Future<void> addExercises() async {
         primaryMuscles: ['Klatka piersiowa'],
         secondaryMuscles: ['Triceps', 'Barki'],
         level: 'Średni',
-        description: 'Klasyczne wyciskanie na ławce w celu rozwoju klatki piersiowej.',
+        description:
+            'Klasyczne wyciskanie na ławce w celu rozwoju klatki piersiowej.',
         youtubeLink: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
       ),
       Exercise(
@@ -21,7 +21,8 @@ Future<void> addExercises() async {
         primaryMuscles: ['Klatka piersiowa'],
         secondaryMuscles: ['Barki'],
         level: 'Początkujący',
-        description: 'Ćwiczenie rozwijające wewnętrzną część klatki piersiowej.',
+        description:
+            'Ćwiczenie rozwijające wewnętrzną część klatki piersiowej.',
         youtubeLink: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
       ),
       Exercise(
@@ -192,7 +193,7 @@ Future<void> addExercises() async {
         secondaryMuscles: [],
         level: 'Początkujący',
         description: 'Ćwiczenie na rozwój tylnej części przedramion.',
-          youtubeLink: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+        youtubeLink: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
       ),
       Exercise(
         name: 'Uginanie nadgarstków z hantlami',
@@ -411,10 +412,10 @@ Future<void> addExercises() async {
         primaryMuscles: ['Kardio'],
         secondaryMuscles: ['Całe ciało'],
         level: 'Średni',
-        description: 'Ćwiczenie na poprawę kondycji i wzmocnienie całego ciała.',
+        description:
+            'Ćwiczenie na poprawę kondycji i wzmocnienie całego ciała.',
         youtubeLink: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
       ),
-
     ]);
 
     print('Ćwiczenia zostały pomyślnie dodane.');

@@ -43,7 +43,8 @@ class _ExerciseListScreenState extends State<ExerciseListScreen> {
             );
           } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
             final exercises = snapshot.data!;
-            return ExerciseGridListWidget(exercises: exercises,isTrainingScreen: false); // Używamy naszego widgetu
+            return ExerciseGridListWidget(
+                exercises: exercises, isTrainingScreen: false);
           } else {
             return const Center(
               child: Text('Brak ćwiczeń do wyświetlenia.'),
