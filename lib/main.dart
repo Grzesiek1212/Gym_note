@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:gym_note/models/photo_model.dart';
-import 'package:gym_note/screens/exercise/exercise_data.dart';
+import 'package:gym_note/features/profile/data/models/photo_model.dart';
+import 'package:gym_note/features/exercise/data/repositories/exercise_data.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
-import 'models/exercise_model.dart';
-import 'models/measurement_model.dart';
-import 'models/set_model.dart';
-import 'models/training_card_model.dart';
-import 'models/training_exercise_model.dart';
-import 'models/training_plan_card_model.dart';
-import 'screens/plan/ready_plan_data.dart';
-import 'screens/training/training_screen.dart';
-import 'screens/exercise/exercise_screen.dart';
-import 'screens/history/history_screen.dart';
-import 'screens/plan/plan_screen.dart';
-import 'screens/profile/profile_screen.dart';
-import 'services/training/training_service.dart';
+import 'features/exercise/presentation/screens/exercise_screen.dart';
+import 'features/exercise/data/models/exercise_model.dart';
+import 'features/profile/data/models/measurement_model.dart';
+import 'core/data/models/set_model.dart';
+import 'features/training/data/models/training_card_model.dart';
+import 'core/data/models/training_exercise_model.dart';
+import 'features/plan/data/models/training_plan_card_model.dart';
+import 'features/plan/data/repositories/ready_plan_data.dart';
+import 'features/training/presentation/screens/training_screen.dart';
+import 'features/history/presentation/screens/history_screen.dart';
+import 'features/plan/presentation/screens/plan_screen.dart';
+import 'features/profile/presentation/screens/profile_screen.dart';
+import 'features/training/data/services/training_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -63,6 +63,7 @@ class MyApp extends StatelessWidget {
       home: MainNavigationBar(
         flag: false,
         trainingPlanCard: TrainingPlanCardModel.empty(),
+        panelNumber: 2,
       ),
     );
   }
@@ -71,10 +72,13 @@ class MyApp extends StatelessWidget {
 class MainNavigationBar extends StatefulWidget {
   final bool flag;
   final TrainingPlanCardModel trainingPlanCard;
+  final int panelNumber;
+
   const MainNavigationBar({
     super.key,
     required this.flag,
     required this.trainingPlanCard,
+    required this.panelNumber,
   });
 
   @override
@@ -84,11 +88,19 @@ class MainNavigationBar extends StatefulWidget {
 class _MainNavigationBarState extends State<MainNavigationBar> {
   int _currentIndex = 2;
 
+  @override
+  void initState() {
+    super.initState();
+    _currentIndex = widget.panelNumber;
+  }
+
   void _onTabTapped(int index) {
     setState(() {
       _currentIndex = index;
     });
   }
+
+
 
   @override
   Widget build(BuildContext context) {
