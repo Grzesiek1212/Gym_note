@@ -5,30 +5,38 @@ import '../models/training_plan_card_model.dart';
 import '../../../exercise/data/models/exercise_model.dart';
 
 Future<void> addTrainingPlans() async {
-  var trainingPlanBox = await Hive.openBox<TrainingPlanCardModel>('trainingPlanCards');
+  var trainingPlanBox =
+      await Hive.openBox<TrainingPlanCardModel>('trainingPlanCards');
   var exerciseBox = await Hive.openBox<Exercise>('exercises');
 
   if (trainingPlanBox.isEmpty) {
-    // Pobranie ćwiczeń z bazy
     final exercises = exerciseBox.values.toList();
 
     if (exercises.isEmpty) {
       print('Brak ćwiczeń w bazie. Najpierw dodaj ćwiczenia.');
       return;
     }
-
-    // Definicja przykładowych planów treningowych
     final plans = [
       TrainingPlanCardModel(
         name: 'Plan na masę - Góra ciała',
         createdAt: DateTime.now(),
         type: 'ready',
         exercises: [
-          exercises.firstWhere((e) => e.name == 'Wyciskanie na ławce').toTrainingExercise(),
-          exercises.firstWhere((e) => e.name == 'Podciąganie na drążku').toTrainingExercise(),
-          exercises.firstWhere((e) => e.name == 'Wyciskanie hantli na skosie').toTrainingExercise(),
-          exercises.firstWhere((e) => e.name == 'Arnoldki').toTrainingExercise(),
-          exercises.firstWhere((e) => e.name == 'Francuskie wyciskanie').toTrainingExercise(),
+          exercises
+              .firstWhere((e) => e.name == 'Wyciskanie na ławce')
+              .toTrainingExercise(),
+          exercises
+              .firstWhere((e) => e.name == 'Podciąganie na drążku')
+              .toTrainingExercise(),
+          exercises
+              .firstWhere((e) => e.name == 'Wyciskanie hantli na skosie')
+              .toTrainingExercise(),
+          exercises
+              .firstWhere((e) => e.name == 'Arnoldki')
+              .toTrainingExercise(),
+          exercises
+              .firstWhere((e) => e.name == 'Francuskie wyciskanie')
+              .toTrainingExercise(),
         ],
       ),
       TrainingPlanCardModel(
@@ -37,10 +45,16 @@ Future<void> addTrainingPlans() async {
         type: 'ready',
         exercises: [
           exercises.firstWhere((e) => e.name == 'Burpees').toTrainingExercise(),
-          exercises.firstWhere((e) => e.name == 'Przysiady ze sztangą').toTrainingExercise(),
-          exercises.firstWhere((e) => e.name == 'Mountain Climbers').toTrainingExercise(),
+          exercises
+              .firstWhere((e) => e.name == 'Przysiady ze sztangą')
+              .toTrainingExercise(),
+          exercises
+              .firstWhere((e) => e.name == 'Mountain Climbers')
+              .toTrainingExercise(),
           exercises.firstWhere((e) => e.name == 'Plank').toTrainingExercise(),
-          exercises.firstWhere((e) => e.name == 'Martwy ciąg').toTrainingExercise(),
+          exercises
+              .firstWhere((e) => e.name == 'Martwy ciąg')
+              .toTrainingExercise(),
         ],
       ),
       TrainingPlanCardModel(
@@ -48,11 +62,21 @@ Future<void> addTrainingPlans() async {
         createdAt: DateTime.now(),
         type: 'ready',
         exercises: [
-          exercises.firstWhere((e) => e.name == 'Przysiady ze sztangą').toTrainingExercise(),
-          exercises.firstWhere((e) => e.name == 'Martwy ciąg na prostych nogach').toTrainingExercise(),
-          exercises.firstWhere((e) => e.name == 'Hip Thrust').toTrainingExercise(),
-          exercises.firstWhere((e) => e.name == 'Wspięcia na palce na maszynie').toTrainingExercise(),
-          exercises.firstWhere((e) => e.name == 'Przysiad bułgarski').toTrainingExercise(),
+          exercises
+              .firstWhere((e) => e.name == 'Przysiady ze sztangą')
+              .toTrainingExercise(),
+          exercises
+              .firstWhere((e) => e.name == 'Martwy ciąg na prostych nogach')
+              .toTrainingExercise(),
+          exercises
+              .firstWhere((e) => e.name == 'Hip Thrust')
+              .toTrainingExercise(),
+          exercises
+              .firstWhere((e) => e.name == 'Wspięcia na palce na maszynie')
+              .toTrainingExercise(),
+          exercises
+              .firstWhere((e) => e.name == 'Przysiad bułgarski')
+              .toTrainingExercise(),
         ],
       ),
     ];
@@ -68,10 +92,12 @@ extension on Exercise {
   TrainingExerciseModel toTrainingExercise() {
     return TrainingExerciseModel(
       exercise: this,
-      sets: [ExerciseSet(
-        repetitions: 0, // Liczba powtórzeń
-        weight: 0.0, // Waga w kg
-      ),], // Puste serie, można je wypełnić później
+      sets: [
+        ExerciseSet(
+          repetitions: 0,
+          weight: 0.0,
+        ),
+      ],
     );
   }
 }

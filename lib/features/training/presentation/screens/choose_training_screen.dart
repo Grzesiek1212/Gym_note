@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gym_note/features/plan/data/services/plan_service.dart';
 
 import '../../../plan/data/models/training_plan_card_model.dart';
-import '../../../plan/presentation/widgets/plan_card.dart';
+import '../../../plan/presentation/widgets/plan_card_widget.dart';
 
 class ChooseTrainingScreen extends StatelessWidget {
   final String planType;
@@ -15,7 +15,7 @@ class ChooseTrainingScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(planType), // Wyświetlamy typ planu w nagłówku
+        title: Text(planType),
         backgroundColor: const Color(0xFFF5F5F5),
         elevation: 0,
       ),
@@ -35,7 +35,7 @@ class ChooseTrainingScreen extends StatelessWidget {
           return ListView.builder(
             itemCount: plans.length,
             itemBuilder: (context, index) {
-              return PlanCard(
+              return PlanCardWidget(
                 plan: plans[index],
                 planName: plans[index].name,
                 exercises: plans[index].exercises.map((e) => {
