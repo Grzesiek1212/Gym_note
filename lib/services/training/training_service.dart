@@ -137,12 +137,6 @@ class TrainingService with ChangeNotifier {
       print("Nie można pobrać planu o nazwie '$planName'.");
       return;
     }
-
-    if (trainingExercisesList.length != plan.exercises.length) {
-      print("Nie zgadza się liczba ćwiczeń. Nie można zaktualizować planu '$planName'.");
-      return;
-    }
-
     for (int i = 0; i < plan.exercises.length; i++) {
       final exercise = plan.exercises[i];
       final updatedExercise = exercise.copyWith(sets: trainingExercisesList[i].sets);
