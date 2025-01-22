@@ -83,19 +83,11 @@ class LineChartWidget extends StatelessWidget {
               spots: spots,
               isCurved: true,
               gradient: LinearGradient(
-                colors: [Colors.orange, Colors.deepOrange],
+                colors: [Colors.lightGreenAccent, Colors.green],
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
               ),
               barWidth: 4,
-              belowBarData: BarAreaData(
-                show: true,
-                gradient: LinearGradient(
-                  colors: [Colors.orange.withOpacity(0.2), Colors.transparent],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                ),
-              ),
               dotData: FlDotData(show: true),
             ),
           ],

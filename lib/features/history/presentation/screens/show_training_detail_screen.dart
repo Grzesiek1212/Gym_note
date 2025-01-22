@@ -6,6 +6,7 @@ import '../../data/services/history_service.dart';
 import '../../../training/data/services/training_service.dart';
 import '../widgets/training_details_widget.dart';
 
+
 class TrainingDetailScreen extends StatelessWidget {
   final TrainingService historyService = TrainingService();
   final TrainingCard training;
@@ -21,7 +22,6 @@ class TrainingDetailScreen extends StatelessWidget {
   }
 
   void shareTrainingReport() {
-    // Use the share_plus package to share the training details
     //Share.share('Training Report: ${training.description}');
   }
 
@@ -35,6 +35,10 @@ class TrainingDetailScreen extends StatelessWidget {
             icon: Icon(Icons.share),
             onPressed: () {
               shareTrainingReport();
+              ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('udostępnianie w budowie :('),
+                    backgroundColor: Colors.yellow,),
+              );
             },
           ),
           PopupMenuButton<String>(

@@ -80,7 +80,7 @@ class ExerciseChartWidget extends StatelessWidget {
               spots: spots,
               isCurved: true,
               gradient: LinearGradient(
-                colors: [Colors.orange, Colors.deepOrange],
+                colors: [Colors.lightGreenAccent, Colors.green],
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
               ),
