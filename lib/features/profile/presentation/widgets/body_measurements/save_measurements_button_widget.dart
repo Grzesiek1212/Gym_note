@@ -34,6 +34,24 @@ class SaveMeasurementsButtonWidget extends StatelessWidget {
       width: double.infinity,
       child: ElevatedButton(
         onPressed: () async {
+
+          if (chestController.text.isEmpty ||
+              leftBicepsController.text.isEmpty ||
+              rightBicepsController.text.isEmpty ||
+              leftForearmController.text.isEmpty ||
+              rightForearmController.text.isEmpty ||
+              waistController.text.isEmpty ||
+              hipsController.text.isEmpty ||
+              thighController.text.isEmpty ||
+              calfController.text.isEmpty) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('By zapisać dane wszytskie pola muszą być uzupełnione'),
+                backgroundColor: Colors.red,
+              ),
+            );
+            return;
+          }
           final measurements = {
             'chest': chestController.text,
             'leftBiceps': leftBicepsController.text,
@@ -83,7 +101,7 @@ class SaveMeasurementsButtonWidget extends StatelessWidget {
           ),
           elevation: 8.0,
           backgroundColor: Colors.green,
-          shadowColor: Colors.green.withOpacity(0.5),
+          shadowColor: Colors.lightGreen,
           textStyle: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,

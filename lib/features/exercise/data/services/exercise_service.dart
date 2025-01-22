@@ -21,8 +21,8 @@ class ExerciseService {
           for (var set in trainingExercise.sets) {
             exerciseExecutions.add({
               'date': training.date.toIso8601String(),
-              'repetitions': set.repetitions ?? 0,
-              'weight': set.weight ?? 0.0,
+              'repetitions': set.repetitions,
+              'weight': set.weight,
             });
           }
         }

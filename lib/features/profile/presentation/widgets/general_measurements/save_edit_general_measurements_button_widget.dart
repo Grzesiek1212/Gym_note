@@ -36,6 +36,23 @@ class SaveEditGeneralMeasurementsButtonWidget extends StatelessWidget {
             return MapEntry(key, controller.text);
           });
 
+          bool allFieldsFilled = true;
+          controllers.forEach((key, controller) {
+            if (controller.text.isEmpty) {
+              allFieldsFilled = false;
+            }
+          });
+
+          if (!allFieldsFilled) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('By zapisać dane wszytskie pola muszą być uzupełnione'),
+                backgroundColor: Colors.red,
+              ),
+            );
+            return;
+          }
+
           try {
             await profileService.updateGeneralMeasurements(
               date: selectedDate!,

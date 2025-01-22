@@ -56,9 +56,31 @@ class TrainingHeaderWidget extends StatelessWidget {
               children: [
                 Consumer<TrainingService>(
                   builder: (context, trainingService, child) {
-                    return Text(
-                      trainingService.breakSeconds.toString(),
-                      style: const TextStyle(color: Colors.black, fontSize: 24),
+                    final breakSeconds = trainingService.breakSeconds;
+                    return TweenAnimationBuilder(
+                      tween: ColorTween(
+                        begin: Colors.black,
+                        end: breakSeconds <= 6 ? Colors.red : Colors.black,
+                      ),
+                      duration: const Duration(seconds: 1),
+                      builder: (context, Color? color, child) {
+                        return AnimatedBuilder(
+                          animation: AlwaysStoppedAnimation(breakSeconds),
+                          builder: (context, child) {
+                            double scale = breakSeconds <= 6
+                                ? 1.2 + 0.7 * (breakSeconds % 2)
+                                : 1.0;
+
+                            return Transform.scale(
+                              scale: scale,
+                              child: Text(
+                                '$breakSeconds',
+                                style: TextStyle(color: color, fontSize: 24),
+                              ),
+                            );
+                          },
+                        );
+                      },
                     );
                   },
                 ),
