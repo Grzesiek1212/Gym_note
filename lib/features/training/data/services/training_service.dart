@@ -120,6 +120,12 @@ class TrainingService with ChangeNotifier {
   // --------------- Finish training functions ------------------------------
 
   Future<void> finishAndResetTraining(bool isNew, String planName, String descrition) async {
+
+    for(int i = 0 ; i < trainingExercisesList.length;i++){
+      if(trainingExercisesList[i].sets.isEmpty){
+        trainingExercisesList[i].sets.add(ExerciseSet(repetitions: 0, weight: 0));
+      }
+    }
     await saveTrainingData(descrition);
     if (isNew) {
       await savePlanTrainingData(planName);
@@ -180,12 +186,18 @@ class TrainingService with ChangeNotifier {
       print("Nie można pobrać planu o nazwie '$planName'.");
       return;
     }
-    for (int i = 0; i < plan.exercises.length; i++) {
-      final exercise = plan.exercises[i];
-      final updatedExercise = exercise.copyWith(
-          sets: trainingExercisesList[i].sets);
-      plan.exercises[i] = updatedExercise;
-    }
+    for (int i = 0; i < trainingExercisesList.length; i++) {
+      final exercisename = trainingExercisesList[i].exercise.name;
+      for(int j = 0 ; j < plan.exercises.length;j++){
+        if(exercisename == plan.exercises[j].exercise.name) {
+          final exercise = plan.exercises[j];
+          final updatedExercise = exercise.copyWith(
+              sets: trainingExercisesList[i].sets);
+          plan.exercises[j] = updatedExercise;
+          }
+
+        }
+      }
     await trainingPlanBox.putAt(
       planIndex,
       plan.copyWith(

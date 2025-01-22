@@ -202,6 +202,14 @@ class _TrainingScreenState extends State<TrainingScreen> {
         children: [
           TrainingHeaderWidget(
             onFinishTraining: () async {
+
+              if(trainingService.trainingExercisesList.isEmpty){
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('musisz dodać chociaż 1 ćwiczenie aby zakończyć trening'),
+                  backgroundColor: Colors.red),
+                );
+                return;
+              }
               bool confirmed = await _showFinishDialog(context);
               if (!confirmed) return;
 

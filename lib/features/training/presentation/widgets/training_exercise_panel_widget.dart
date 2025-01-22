@@ -15,12 +15,31 @@ class ExercisePanelWidget extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            exercise.exercise.name,
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            textAlign: TextAlign.center,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  trainingService.removeExerciseFromTraining(exercise);
+                },
+                child: Container(
+                  padding: EdgeInsets.all(8),
+                  child: Icon(
+                    Icons.delete,
+                    color: Colors.red.shade600,
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Text(
+                  exercise.exercise.name,
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ],
           ),
           SizedBox(height: 16),
           Expanded(
@@ -28,23 +47,36 @@ class ExercisePanelWidget extends StatelessWidget {
               itemCount: exercise.sets.length,
               itemBuilder: (context, index) {
                 final set = exercise.sets[index];
-                return ListTile(
-                  leading: Text(
-                    'Seria ${index + 1}',
-                    style: TextStyle(fontSize: 18),
+                return Card(
+                  margin: EdgeInsets.only(bottom: 8),
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  title: Text(
-                      'Powtórzenia: ${set.repetitions}, Ciężar: ${set.weight} kg'),
-                  trailing: IconButton(
-                    icon: Icon(Icons.delete, color: Colors.red),
-                    onPressed: () {
-                      trainingService.removeSetFromExercise(exercise, index);
+                  child: ListTile(
+                    contentPadding: EdgeInsets.all(16),
+                    leading: CircleAvatar(
+                      backgroundColor: Colors.blue.shade50,
+                      child: Text(
+                        'S${index + 1}',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    title: Text(
+                      'Powtórzenia: ${set.repetitions},\nCiężar: ${set.weight} kg',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    trailing: IconButton(
+                      icon: Icon(Icons.delete, color: Colors.red),
+                      onPressed: () {
+                        // Usuwanie serii po naciśnięciu
+                        trainingService.removeSetFromExercise(exercise, index);
+                      },
+                    ),
+                    onTap: () {
+                      _showEditSetDialog(context, trainingService, exercise, index);
                     },
                   ),
-                  onTap: () {
-                    _showEditSetDialog(
-                        context, trainingService, exercise, index);
-                  },
                 );
               },
             ),
@@ -56,10 +88,7 @@ class ExercisePanelWidget extends StatelessWidget {
             child: Ink(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [
-                    Colors.blue.shade50,
-                    Colors.green.shade50
-                  ], // Gradient
+                  colors: [Colors.blue.shade100, Colors.green.shade100],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
@@ -92,14 +121,14 @@ class ExercisePanelWidget extends StatelessWidget {
   }
 
   void _showEditSetDialog(
-    BuildContext context,
-    TrainingService trainingService,
-    TrainingExerciseModel exercise,
-    int setIndex,
-  ) {
+      BuildContext context,
+      TrainingService trainingService,
+      TrainingExerciseModel exercise,
+      int setIndex,
+      ) {
     final set = exercise.sets[setIndex];
     final repetitionsController =
-        TextEditingController(text: set.repetitions.toString());
+    TextEditingController(text: set.repetitions.toString());
     final weightController = TextEditingController(text: set.weight.toString());
 
     showDialog(
@@ -145,7 +174,6 @@ class ExercisePanelWidget extends StatelessWidget {
       },
     );
   }
-
   void _showAddSetDialog(
       BuildContext context, TrainingService trainingService) {
     final repetitionsController = TextEditingController();
