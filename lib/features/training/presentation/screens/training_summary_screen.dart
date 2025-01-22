@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import '../../data/models/training_card_model.dart';
-import '../../../history/presentation/widgets/training_deatils_widget.dart';
+import '../../../history/presentation/widgets/training_details_widget.dart';
 
 class TrainingSummaryScreen extends StatelessWidget {
   final TrainingCard training;
 
-
-  const TrainingSummaryScreen({Key? key, required this.training}) : super(key: key);
+  const TrainingSummaryScreen({Key? key, required this.training})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class TrainingSummaryScreen extends StatelessWidget {
       ),
       body: TrainingDetailsWidget(
         training: training,
-        isSummary: true, // Flaga określająca, że to ekran podsumowania
+        isSummary: true,
       ),
     );
   }

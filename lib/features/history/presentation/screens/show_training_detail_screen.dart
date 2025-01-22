@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../training/data/models/training_card_model.dart';
 import '../../data/services/history_service.dart';
 import '../../../training/data/services/training_service.dart';
-import '../widgets/training_deatils_widget.dart';
+import '../widgets/training_details_widget.dart';
 
 class TrainingDetailScreen extends StatelessWidget {
   final TrainingService historyService = TrainingService();

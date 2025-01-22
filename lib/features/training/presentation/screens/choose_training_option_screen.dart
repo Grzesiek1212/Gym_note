@@ -26,14 +26,13 @@ class ChooseTrainingOptionScreen extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) => ChooseTrainingScreen(
-                      planType: 'Gotowe plany treningowe', // Przekazujemy odpowiedni typ
+                      planType: 'Gotowe plany treningowe',
                     ),
                   ),
                 );
               },
             ),
             SizedBox(height: 16),
-
             TrainingOptionCard(
               title: 'Własne plany treningowe',
               subtitle: 'Korzystaj już z planu przez siebie ułożonego',
@@ -42,14 +41,13 @@ class ChooseTrainingOptionScreen extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) => ChooseTrainingScreen(
-                      planType: 'Własne plany treningowe', // Przekazujemy odpowiedni typ
+                      planType: 'Własne plany treningowe',
                     ),
                   ),
                 );
               },
             ),
             SizedBox(height: 16),
-
             TrainingOptionCard(
               title: 'Trening bez planu',
               subtitle: 'Dodawaj ćwiczenia na bieżąco',
@@ -63,7 +61,7 @@ class ChooseTrainingOptionScreen extends StatelessWidget {
                       panelNumber: 2,
                     ),
                   ),
-                      (route) => false, // Usuwanie wszystkich poprzednich ekranów z historii
+                  (route) => false,
                 );
               },
             ),

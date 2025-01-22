@@ -6,13 +6,16 @@ import '../../../exercise/presentation/widgets/exercise_grid_list_widget.dart';
 class ExerciseTrainingListScreen extends StatefulWidget {
   final String name;
 
-  const ExerciseTrainingListScreen({Key? key, required this.name}) : super(key: key);
+  const ExerciseTrainingListScreen({Key? key, required this.name})
+      : super(key: key);
 
   @override
-  _ExerciseTrainingListScreenState createState() => _ExerciseTrainingListScreenState();
+  _ExerciseTrainingListScreenState createState() =>
+      _ExerciseTrainingListScreenState();
 }
 
-class _ExerciseTrainingListScreenState extends State<ExerciseTrainingListScreen> {
+class _ExerciseTrainingListScreenState
+    extends State<ExerciseTrainingListScreen> {
   final ExerciseService _exerciseService = ExerciseService();
   late Future<List<Exercise>> _exercisesFuture;
 
@@ -43,7 +46,8 @@ class _ExerciseTrainingListScreenState extends State<ExerciseTrainingListScreen>
             );
           } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
             final exercises = snapshot.data!;
-            return ExerciseGridListWidget(exercises: exercises, isTrainingScreen: true); // Używamy naszego widgetu
+            return ExerciseGridListWidget(
+                exercises: exercises, isTrainingScreen: true);
           } else {
             return const Center(
               child: Text('Brak ćwiczeń do wyświetlenia.'),

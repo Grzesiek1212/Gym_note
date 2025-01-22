@@ -23,7 +23,6 @@ class ExercisePanelWidget extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           SizedBox(height: 16),
-
           Expanded(
             child: ListView.builder(
               itemCount: exercise.sets.length,
@@ -34,7 +33,8 @@ class ExercisePanelWidget extends StatelessWidget {
                     'Seria ${index + 1}',
                     style: TextStyle(fontSize: 18),
                   ),
-                  title: Text('Powtórzenia: ${set.repetitions}, Ciężar: ${set.weight} kg'),
+                  title: Text(
+                      'Powtórzenia: ${set.repetitions}, Ciężar: ${set.weight} kg'),
                   trailing: IconButton(
                     icon: Icon(Icons.delete, color: Colors.red),
                     onPressed: () {
@@ -42,13 +42,13 @@ class ExercisePanelWidget extends StatelessWidget {
                     },
                   ),
                   onTap: () {
-                    _showEditSetDialog(context, trainingService, exercise, index);
+                    _showEditSetDialog(
+                        context, trainingService, exercise, index);
                   },
                 );
               },
             ),
           ),
-
           InkWell(
             onTap: () {
               _showAddSetDialog(context, trainingService);
@@ -56,7 +56,10 @@ class ExercisePanelWidget extends StatelessWidget {
             child: Ink(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Colors.blue.shade50, Colors.green.shade50], // Gradient
+                  colors: [
+                    Colors.blue.shade50,
+                    Colors.green.shade50
+                  ], // Gradient
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
@@ -75,7 +78,10 @@ class ExercisePanelWidget extends StatelessWidget {
                 alignment: Alignment.center,
                 child: Text(
                   'Dodaj serię',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87),
                 ),
               ),
             ),
@@ -86,13 +92,14 @@ class ExercisePanelWidget extends StatelessWidget {
   }
 
   void _showEditSetDialog(
-      BuildContext context,
-      TrainingService trainingService,
-      TrainingExerciseModel exercise,
-      int setIndex,
-      ) {
+    BuildContext context,
+    TrainingService trainingService,
+    TrainingExerciseModel exercise,
+    int setIndex,
+  ) {
     final set = exercise.sets[setIndex];
-    final repetitionsController = TextEditingController(text: set.repetitions.toString());
+    final repetitionsController =
+        TextEditingController(text: set.repetitions.toString());
     final weightController = TextEditingController(text: set.weight.toString());
 
     showDialog(
@@ -122,10 +129,13 @@ class ExercisePanelWidget extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                final repetitions = int.tryParse(repetitionsController.text) ?? set.repetitions;
-                final weight = double.tryParse(weightController.text) ?? set.weight;
+                final repetitions =
+                    int.tryParse(repetitionsController.text) ?? set.repetitions;
+                final weight =
+                    double.tryParse(weightController.text) ?? set.weight;
 
-                trainingService.updateSetInExercise(exercise, setIndex, repetitions, weight);
+                trainingService.updateSetInExercise(
+                    exercise, setIndex, repetitions, weight);
                 Navigator.pop(context);
               },
               child: Text('Zapisz'),
@@ -136,8 +146,8 @@ class ExercisePanelWidget extends StatelessWidget {
     );
   }
 
-
-  void _showAddSetDialog(BuildContext context, TrainingService trainingService) {
+  void _showAddSetDialog(
+      BuildContext context, TrainingService trainingService) {
     final repetitionsController = TextEditingController();
     final weightController = TextEditingController();
 
@@ -168,11 +178,13 @@ class ExercisePanelWidget extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                final repetitions = int.tryParse(repetitionsController.text) ?? 0;
+                final repetitions =
+                    int.tryParse(repetitionsController.text) ?? 0;
                 final weight = double.tryParse(weightController.text) ?? 0.0;
 
                 if (repetitions > 0 && weight >= 0) {
-                  trainingService.addSetToExercise(exercise, repetitions, weight);
+                  trainingService.addSetToExercise(
+                      exercise, repetitions, weight);
                   Navigator.pop(context);
                 }
               },

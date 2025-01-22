@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import '../../../exercise/data/models/exercise_model.dart';
@@ -10,18 +11,31 @@ class TrainingService with ChangeNotifier {
   List<TrainingExerciseModel> _trainingExercisesList = [];
   DateTime? trainingStartDate;
   bool isTrainingStarted = false;
+  bool _isRunning = false;
+  Timer? _timer;
+  int _breakSeconds = 60;
+  int _initialBreakSeconds = 60;
 
+  // ---------------- get functions -----------------------------
   List<TrainingExerciseModel> get trainingExercisesList => _trainingExercisesList;
-
   int get trainingTime {
-    if (trainingStartDate == null) {
-      return 0;
-    }
+    if (trainingStartDate == null) return 0;
     return DateTime.now().difference(trainingStartDate!).inMinutes;
   }
+  int get breakSeconds => _breakSeconds;
+  bool get isRunning => _isRunning;
 
-  void setTrainingFromPlan(TrainingPlanCardModel trainingPlanCard) {
-    _trainingExercisesList = List<TrainingExerciseModel>.from(trainingPlanCard.exercises);
+
+  // ------------ time management --------------------------
+
+  void startBreak() {
+    _breakSeconds = _initialBreakSeconds;
+    notifyListeners();
+  }
+
+  void updateBreakTime(int seconds) {
+    _breakSeconds = seconds;
+    _initialBreakSeconds = seconds;
     notifyListeners();
   }
 
@@ -30,7 +44,40 @@ class TrainingService with ChangeNotifier {
     notifyListeners();
   }
 
+  void editTime(int newTime) {
+    _breakSeconds = newTime;
+    _initialBreakSeconds = newTime;
+    notifyListeners();
+  }
 
+  void startStopwatch() {
+    if (_isRunning) {
+      _timer?.cancel();
+    } else {
+      _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+        if (_breakSeconds > 0) {
+          _breakSeconds--;
+          notifyListeners();
+          if (_breakSeconds == 0) {
+            _timer?.cancel();
+            _isRunning = false;
+            _breakSeconds = _initialBreakSeconds;
+          }
+        }
+      });
+    }
+    _isRunning = !_isRunning;
+    notifyListeners();
+  }
+
+
+  // -------------------- training functions -------------------------------
+
+  void setTrainingFromPlan(TrainingPlanCardModel trainingPlanCard) {
+    _trainingExercisesList =
+    List<TrainingExerciseModel>.from(trainingPlanCard.exercises);
+    notifyListeners();
+  }
 
   void addExerciseToTraining(Exercise exercise) {
     var newTrainingExercise = TrainingExerciseModel(
@@ -46,13 +93,21 @@ class TrainingService with ChangeNotifier {
     notifyListeners();
   }
 
-  void removeExerciseFromTraining(TrainingExerciseModel trainingExercise) {
-    _trainingExercisesList.remove(trainingExercise);
+  void addSetToExercise(TrainingExerciseModel exercise, int repetitions, double weight) {
+    exercise.sets.add(ExerciseSet(repetitions: repetitions, weight: weight));
     notifyListeners();
   }
 
-  void addSetToExercise(TrainingExerciseModel exercise, int repetitions, double weight) {
-    exercise.sets.add(ExerciseSet(repetitions: repetitions, weight: weight));
+  void updateSetInExercise(TrainingExerciseModel exercise, int setIndex, int repetitions, double weight,) {
+    exercise.sets[setIndex] = exercise.sets[setIndex].copyWith(
+      repetitions: repetitions,
+      weight: weight,
+    );
+    notifyListeners();
+  }
+
+  void removeExerciseFromTraining(TrainingExerciseModel trainingExercise) {
+    _trainingExercisesList.remove(trainingExercise);
     notifyListeners();
   }
 
@@ -61,6 +116,9 @@ class TrainingService with ChangeNotifier {
     notifyListeners();
   }
 
+
+  // --------------- Finish training functions ------------------------------
+
   Future<void> finishAndResetTraining(bool isNew, String planName, String descrition) async {
     await saveTrainingData(descrition);
     if (isNew) {
@@ -68,13 +126,12 @@ class TrainingService with ChangeNotifier {
     } else {
       await updatePlanSets(planName);
     }
-
     trainingStartDate = null;
     _trainingExercisesList.clear();
     notifyListeners();
   }
 
-  Future<void> saveTrainingData(String descrition) async{
+  Future<void> saveTrainingData(String descrition) async {
     final training = TrainingCard(
       exercises: List<TrainingExerciseModel>.from(_trainingExercisesList),
       date: DateTime.now(),
@@ -88,7 +145,8 @@ class TrainingService with ChangeNotifier {
 
   Future<void> savePlanTrainingData(String planName) async {
     try {
-      var trainingPlanBox = await Hive.openBox<TrainingPlanCardModel>('trainingPlanCards');
+      var trainingPlanBox = await Hive.openBox<TrainingPlanCardModel>(
+          'trainingPlanCards');
 
       final trainingPlan = TrainingPlanCardModel(
         exercises: List<TrainingExerciseModel>.from(_trainingExercisesList),
@@ -105,21 +163,9 @@ class TrainingService with ChangeNotifier {
     }
   }
 
-  void updateSetInExercise(
-      TrainingExerciseModel exercise,
-      int setIndex,
-      int repetitions,
-      double weight,
-      ) {
-    exercise.sets[setIndex] = exercise.sets[setIndex].copyWith(
-      repetitions: repetitions,
-      weight: weight,
-    );
-    notifyListeners();
-  }
-
   Future<void> updatePlanSets(String planName) async {
-    var trainingPlanBox = await Hive.openBox<TrainingPlanCardModel>('trainingPlanCards');
+    var trainingPlanBox = await Hive.openBox<TrainingPlanCardModel>(
+        'trainingPlanCards');
     final planIndex = trainingPlanBox.values
         .toList()
         .indexWhere((plan) => plan.name == planName);
@@ -136,12 +182,14 @@ class TrainingService with ChangeNotifier {
     }
     for (int i = 0; i < plan.exercises.length; i++) {
       final exercise = plan.exercises[i];
-      final updatedExercise = exercise.copyWith(sets: trainingExercisesList[i].sets);
+      final updatedExercise = exercise.copyWith(
+          sets: trainingExercisesList[i].sets);
       plan.exercises[i] = updatedExercise;
     }
     await trainingPlanBox.putAt(
       planIndex,
-      plan.copyWith(exercises: List<TrainingExerciseModel>.from(plan.exercises)),
+      plan.copyWith(
+          exercises: List<TrainingExerciseModel>.from(plan.exercises)),
     );
     print("Zaktualizowano dane w planie treningowym '$planName'.");
   }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gym_note/features/plan/data/services/plan_service.dart';
-
 import '../../../plan/data/models/training_plan_card_model.dart';
 import '../../../plan/presentation/widgets/plan_card_widget.dart';
 
@@ -38,10 +37,15 @@ class ChooseTrainingScreen extends StatelessWidget {
               return PlanCardWidget(
                 plan: plans[index],
                 planName: plans[index].name,
-                exercises: plans[index].exercises.map((e) => {
-                  'name': e.exercise.name,
-                  'sets': e.sets.map((set) => 'Powtórzenia: ${set.repetitions}').join(', ')
-                }).toList(),
+                exercises: plans[index]
+                    .exercises
+                    .map((e) => {
+                          'name': e.exercise.name,
+                          'sets': e.sets
+                              .map((set) => 'Powtórzenia: ${set.repetitions}')
+                              .join(', ')
+                        })
+                    .toList(),
               );
             },
           );
