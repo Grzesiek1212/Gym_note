@@ -26,17 +26,6 @@ class _PlanScreenState extends State<PlanScreen>
           style: TextStyle(color: Colors.black),
         ),
         elevation: 0,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add, color: Colors.black),
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                    content: Text('Dodawanie nowego planu w budowie...')),
-              );
-            },
-          ),
-        ],
         bottom: TabBar(
           controller: _tabController,
           tabs: const [

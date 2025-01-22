@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gym_note/features/plan/data/services/plan_service.dart';
+import '../../../../main.dart';
 import '../../data/models/training_plan_card_model.dart';
 import 'exercise_list_widget.dart';
 import 'plan_card_header_widget.dart';
@@ -65,9 +66,28 @@ class _TrainingPlanCardState extends State<PlanCardWidget> {
                   });
                 },
                 onDelete: () {
+                  if(widget.plan.type == 'ready'){
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Nie możesz usunąc gotowego traningu'),
+                          backgroundColor: Colors.red),
+                    );
+                    return;
+                  }
                   _planService.deletePlan(widget.planName);
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Usunięcie planu...')),
+                  );
+
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MainNavigationBar(
+                        flag: false,
+                        trainingPlanCard: TrainingPlanCardModel.empty(),
+                        panelNumber: 1,
+                      ),
+                    ),
+                        (route) => false,
                   );
                 },
               ),

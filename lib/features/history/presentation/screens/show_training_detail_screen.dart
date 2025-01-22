@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../../../main.dart';
+import '../../../plan/data/models/training_plan_card_model.dart';
 import '../../../training/data/models/training_card_model.dart';
 import '../../data/services/history_service.dart';
 import '../../../training/data/services/training_service.dart';
@@ -18,6 +20,11 @@ class TrainingDetailScreen extends StatelessWidget {
     await HistoryService().updateTrainingDescription(updatedTraining);
   }
 
+  void shareTrainingReport() {
+    // Use the share_plus package to share the training details
+    //Share.share('Training Report: ${training.description}');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,20 +34,28 @@ class TrainingDetailScreen extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.share),
             onPressed: () {
-              // TODO: dodac sharownie
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('w produkcji :(')),
-              );
+              shareTrainingReport();
             },
           ),
           PopupMenuButton<String>(
             onSelected: (value) {
               if (value == 'delete') {
-                // TODO: usuwanie treingu
+                HistoryService().deleteTraining(training);
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('w produkcji :(')),
+                  SnackBar(content: Text('Trening został pomyślnie usunięty'),
+                  backgroundColor: Colors.green,),
                 );
-                print('Usuń trening');
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MainNavigationBar(
+                      flag: false,
+                      trainingPlanCard: TrainingPlanCardModel.empty(),
+                      panelNumber: 0,
+                    ),
+                  ),
+                      (route) => false,
+                );
               }
             },
             itemBuilder: (context) => [

@@ -16,7 +16,7 @@ class PlanService {
   }
 
   void deletePlan(String planName) async {
-    var box = await Hive.openBox<TrainingPlanCardModel>('trainingPlans');
+    var box = await Hive.openBox<TrainingPlanCardModel>('trainingPlanCards');
     final planKey = box.keys.firstWhere(
       (key) => box.get(key)?.name == planName,
       orElse: () => null,
