@@ -61,11 +61,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
               final totalWeight = training.exercises.fold<double>(
                 0.0,
-                (sum, exercise) =>
-                    sum +
+                    (sum, exercise) =>
+                sum +
                     exercise.sets.fold<double>(
                       0.0,
-                      (subSum, set) => subSum + set.weight,
+                          (subSum, set) => subSum + (set.weight * set.repetitions),
                     ),
               );
 

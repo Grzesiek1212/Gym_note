@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gym_note/features/profile/data/models/photo_model.dart';
 import 'package:gym_note/features/exercise/data/repositories/exercise_data.dart';
+import 'package:gym_note/features/profile/data/repositories/example_data_profile.dart';
+import 'package:gym_note/features/training/data/repositories/traing_example_data.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'features/exercise/presentation/screens/exercise_screen.dart';
@@ -39,6 +41,9 @@ void main() async {
 
   await addExercises();
   await addTrainingPlans();
+  await addSampleTrainingData();
+  await addSampleProfileData();
+
 
   runApp(
     MultiProvider(

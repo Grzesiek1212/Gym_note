@@ -87,8 +87,17 @@ class TrainingDetailsWidget extends StatelessWidget {
                             TrainingInfoRowWidget(
                                 icon: Icons.bar_chart,
                                 label: 'CIĘŻAR',
-                                value:
-                                    '${training.exercises.fold(0, (sum, e) => sum + e.sets.fold(0, (s, set) => s + set.weight.toInt()))} kg'),
+                              value:
+                              '${(training.exercises.fold<double>(
+                                0.0,
+                                    (totalWeight, exercise) => totalWeight +
+                                    exercise.sets.fold<double>(
+                                      0.0,
+                                          (subTotal, set) =>
+                                      subTotal + (set.weight * set.repetitions),
+                                    ),
+                              ) / 1000).toStringAsFixed(2)} t',
+                            ),
                           ],
                         ),
                       ],
